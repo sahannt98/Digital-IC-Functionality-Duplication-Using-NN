@@ -1,8 +1,7 @@
 import numpy as np
-import mysql.connector
 
 class Fulladder:
-    def __init__(self, NumberOfElement=1000):
+    def __init__(self, NumberOfElement=10000):
         self.NumberOfElement = 50
         self.pinlen = 5
 

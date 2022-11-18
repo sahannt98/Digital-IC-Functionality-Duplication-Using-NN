@@ -1,8 +1,7 @@
 import numpy as np
-import mysql.connector
 
 class AndGate:
-    def __init__(self,NumberOfElement = 1000):
+    def __init__(self,NumberOfElement = 10000):
         self.NumberOfElement = NumberOfElement
         self.Xlen = 2
         self.Ylen = 1

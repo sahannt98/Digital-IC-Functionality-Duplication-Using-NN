@@ -4,8 +4,8 @@ from MysqlConfigure import MysqlConfigure
 from Combinational import Combinational
 
 if __name__ == '__main__':
-    #Inizilization perameter
-    NumberOfElement = 1000
+    #Initialization parameter
+    NumberOfElement = 10000
     input_len = 50
     output_len = 10
     

@@ -55,4 +55,3 @@ class MysqlConfigure:
         for i in ArrayofBinary:
             binarystring += str(i) + " "
         return (binarystring + "0 "*(n-len(ArrayofBinary)))[:-1]
-
