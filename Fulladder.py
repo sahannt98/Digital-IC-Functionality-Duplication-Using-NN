@@ -2,7 +2,7 @@ import numpy as np
 
 class Fulladder:
     def __init__(self, NumberOfElement=10000):
-        self.NumberOfElement = 50
+        self.NumberOfElement = NumberOfElement
         self.pinlen = 5
 
     def Fulladder_gate(self):
