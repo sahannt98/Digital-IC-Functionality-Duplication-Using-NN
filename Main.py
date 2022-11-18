@@ -5,16 +5,16 @@ from Combinational import Combinational
 
 if __name__ == '__main__':
     #Initialization parameter
-    NumberOfElement = 10000
-    input_len = 50
-    output_len = 10
+    NumberOfElement = 100000
+    input_len = 10
+    output_len = 6
     
     #Make the object
-    And_Gate = AndGate(NumberOfElement)
+    #Full_adder = Fulladder(NumberOfElement)
     Mysql_Configure = MysqlConfigure(input_len,output_len)
 
-    X,Y =And_Gate.And_Get() #Make a dataset
-    Mysql_Configure.PushData(X, Y, "andgate") #Push the data for MYSQL
-    X,Y = Mysql_Configure.GetData("andgate") #Get the data from MYSQL
+    #X,Y =Full_adder.Fulladder_gate() #Make a dataset
+    #Mysql_Configure.PushData(X, Y, "Full_adder") #Push the data for MYSQL
+    X,Y = Mysql_Configure.GetData("Full_adder") #Get the data from MYSQL
 
     Combinational(X, Y) #Train the Model

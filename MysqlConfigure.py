@@ -3,7 +3,7 @@ import mysql.connector
 
 class MysqlConfigure:
     def __init__(self,input_len = 50,output_len = 10):
-        self.mydb = mysql.connector.connect(host="localhost", user="root", password="180060")
+        self.mydb = mysql.connector.connect(host="localhost", user="root", password="ayesh")
         self.mycursor = self.mydb.cursor(buffered=True)
         self.input_len = input_len
         self.output_len = output_len
@@ -14,6 +14,8 @@ class MysqlConfigure:
         self.__Uplode_Data(X,Y,Table_name)
 
     def GetData(self,Table_name):
+        self.mydb = mysql.connector.connect(host="localhost", user="root", password="ayesh", database = "digital_functionality_duplication")
+        self.mycursor = self.mydb.cursor(buffered=True)
         self.mycursor.execute(f"SELECT Input, Output FROM {Table_name.lower()}")
         myresult = self.mycursor.fetchall()
         X_ = []
@@ -32,7 +34,7 @@ class MysqlConfigure:
                 break
         else:
             self.mycursor.execute("CREATE DATABASE digital_functionality_duplication")
-        self.mydb = mysql.connector.connect(host="localhost", user="root", password="180060", database = "digital_functionality_duplication")
+        self.mydb = mysql.connector.connect(host="localhost", user="root", password="ayesh", database = "digital_functionality_duplication")
         self.mycursor = self.mydb.cursor(buffered=True)
 
     def __createTabale(self,Table_name):
