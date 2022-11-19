@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from Logic_Function.Combinational_Logic.comman import comman
+from Logic_Function.Combinational_Logic.CommonCombinational import CommonCombinational
 from MysqlConfigure import MysqlConfigure 
 from Combinational import Combinational
 import os
@@ -20,7 +20,7 @@ def make_truth_table():
         Table_Name = request.form.get("Table_Name")
 
         try:
-            comman_logic = comman([i for i in Logic_funtion.split(",")],Length_of_dataset)
+            comman_logic = CommonCombinational([i for i in Logic_funtion.split(",")],Length_of_dataset)
             X,Y,input_len,output_len = comman_logic.make_truth_table()
             try:
                 x_len = int(request.form.get("input_len"))
@@ -48,8 +48,8 @@ def Traing_model():
             Mysql_Configure = MysqlConfigure()
             X,Y = Mysql_Configure.GetData(Table_Name)
             Model = Combinational(X, Y, Percentage, Number_of_epochs)
-            Acurassy = Model.getAcurasy()
-            return render_template('result.html', massage=Acurassy)
+            Accuracy = Model.getAccuracy()
+            return render_template('result.html', massage=Accuracy)
         except:
             return render_template('error.html')
     else:

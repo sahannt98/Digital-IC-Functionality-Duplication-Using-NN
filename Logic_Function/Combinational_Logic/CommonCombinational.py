@@ -1,6 +1,6 @@
 import numpy as np
 import re
-class comman:
+class CommonCombinational:
     def __init__(self,logicarray,NumberOfElement):
         self.logic_array = logicarray
         self.output_pin = len(logicarray)
@@ -9,7 +9,7 @@ class comman:
 
     def make_truth_table(self):
         X = np.array(np.random.randint(0,high=2,size=(self.NumberOfElement, self.input_pin)),dtype='bool')
-        X_ = np.vectorize(self.__boolstr_to_floatstr)(X).astype(int)
+        X_ = np.vectorize(self.__bool_to_int)(X).astype(int)
         Y_ = np.zeros((self.NumberOfElement, self.output_pin),dtype='int')
         for i in range(len(Y_)):
             for j in range(len(Y_[i])):
@@ -34,7 +34,7 @@ class comman:
                 logic +=i
         return logic
 
-    def __boolstr_to_floatstr(self,v):
+    def __bool_to_int(self,v):
         if v == True:
             return 1
         elif v == False:

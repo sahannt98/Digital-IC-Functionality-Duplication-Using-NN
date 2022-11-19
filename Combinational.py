@@ -14,11 +14,11 @@ class Combinational:
         self.Number_of_epochs = Number_of_epochs
 
 
-    def getAcurasy(self):
+    def getAccuracy(self):
         self.__CreateModel()
         self.__TrainModel()
-        Acurasy = self.__TestModel()
-        return Acurasy
+        Accuracy = self.__TestModel()
+        return Accuracy
 
     def __CreateModel(self):
         self.model = Sequential()
