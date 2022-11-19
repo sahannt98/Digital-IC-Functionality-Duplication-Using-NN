@@ -3,17 +3,22 @@ from keras.models import Sequential
 from keras.layers.core import Dense
 
 class Combinational:
-    def __init__(self,X, Y, input_len, output_len):
-        self.input_len = input_len
-        self.output_len = output_len
-        lenth_of_train_set = int(len(X)*0.9)
+    def __init__(self,X, Y, Percentage, Number_of_epochs):
+        self.input_len = len(X[0])
+        self.output_len = len(Y[0])
+        lenth_of_train_set = int(len(X)*(Percentage/100))
         self.input_train = X[:lenth_of_train_set]
         self.output_train = Y[:lenth_of_train_set]
         self.input_test = X[lenth_of_train_set:]
         self.output_test = Y[lenth_of_train_set:]
+        self.Number_of_epochs = Number_of_epochs
+
+
+    def getAcurasy(self):
         self.__CreateModel()
         self.__TrainModel()
-        self.__TestModel()
+        Acurasy = self.__TestModel()
+        return Acurasy
 
     def __CreateModel(self):
         self.model = Sequential()
@@ -24,7 +29,7 @@ class Combinational:
         self.model.compile(loss='mean_squared_error',optimizer='adam', metrics=['binary_accuracy'])
 
     def __TrainModel(self):
-        self.model.fit(self.input_train, self.output_train, epochs=30, verbose=2)
+        self.model.fit(self.input_train, self.output_train, epochs=self.Number_of_epochs, verbose=2)
 
     def __TestModel(self):
         currect_count = 0
@@ -32,5 +37,7 @@ class Combinational:
             predict = np.array([int(i) for i in self.model.predict(np.array([self.input_test[count]]))[0].round()])
             currect = self.output_test[count]
             if np.array_equal(currect,predict): 
-                currect_count += 1 
-        print("Acurasy: ",np.round((currect_count*100)/len(self.input_test),2),"%")
+                currect_count += 1
+        print("Acurasy: ",np.round((currect_count*100)/len(self.input_test),3),"%") 
+        return np.round((currect_count*100)/len(self.input_test),3)
+        
