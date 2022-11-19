@@ -38,6 +38,6 @@ class Combinational:
             currect = self.output_test[count]
             if np.array_equal(currect,predict): 
                 currect_count += 1
-        print("Acurasy: ",np.round((currect_count*100)/len(self.input_test),3),"%") 
+        print("Accuracy: ",np.round((currect_count*100)/len(self.input_test),3),"%") 
         return np.round((currect_count*100)/len(self.input_test),3)
         
