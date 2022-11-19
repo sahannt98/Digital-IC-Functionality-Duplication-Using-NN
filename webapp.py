@@ -23,11 +23,13 @@ def make_truth_table():
             comman_logic = comman([i for i in Logic_funtion.split(",")],Length_of_dataset)
             X,Y,input_len,output_len = comman_logic.make_truth_table()
             try:
-                input_len = int(request.form.get("input_len"))
+                x_len = int(request.form.get("input_len"))
+                input_len = max(x_len, input_len)
             except:
                 pass
             try:
-                output_len = int(request.form.get("output_len"))  
+                y_len = int(request.form.get("output_len"))
+                output_len = max(y_len, output_len)  
             except:
                 pass 
             Mysql_Configure = MysqlConfigure(input_len,output_len)
