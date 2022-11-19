@@ -34,9 +34,9 @@ def make_truth_table():
                 pass 
             Mysql_Configure = MysqlConfigure(input_len,output_len)
             Mysql_Configure.PushData(X, Y, Table_Name)
-            return render_template('TableResult.html', massage="Created table")
-        except:
-            return render_template('TableResult.html', massage="Error come")
+            return render_template('TableResult.html', massage="Created table", status = "correct_result")
+        except Exception as e:
+            return render_template('TableResult.html', massage=e, status = "error_result")
 
 @app.route("/train_model", methods=['GET', 'POST'])
 def Traing_model():
@@ -49,9 +49,9 @@ def Traing_model():
             X,Y = Mysql_Configure.GetData(Table_Name)
             Model = Combinational(X, Y, Percentage, Number_of_epochs)
             Accuracy = Model.getAccuracy()
-            return render_template('result.html', massage=Accuracy)
-        except:
-            return render_template('error.html')
+            return render_template('result.html', massage=Accuracy, status = "correct_result")
+        except Exception as e:
+            return render_template('error.html', massage=e)
     else:
         return render_template('Train.html')
 

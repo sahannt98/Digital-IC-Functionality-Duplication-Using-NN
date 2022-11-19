@@ -45,9 +45,16 @@
             margin: auto;
             display: flex;
         }
-        .result{
-            text-align: center;
+        .select_form{
+            width: 90%;
             margin: auto;
+        }
+
+        .result{
+            text-align: justify;
+            margin: auto;
+            color: red;
+            font-size: medium;
         }
         .imagebox{
             height: 100%;
@@ -97,7 +104,9 @@
     <div class="body">
         <div class="box">
             <div class="select">
-                <h3 class="result">Error come</h3>
+                <div class="select_form">
+                    <h3 class="result">{{massage}}</h3>
+                </div>
             </div>
             <div class="imagebox">
                 <img src= "{{url_for('static', filename='img.jpg')}}"   alt="">

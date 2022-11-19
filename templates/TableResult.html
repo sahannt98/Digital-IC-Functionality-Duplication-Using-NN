@@ -58,8 +58,14 @@
             width: 100%;
             object-fit: fill;
         }
-        .result{
+        .error_result{
+            color: red;
+            text-align: justify;
+            font-size: medium;
+        }
+        .correct_result{
             text-align: center;
+            color: white;
         }
         ul {
             list-style-type: none;
@@ -125,7 +131,7 @@
                         <button type="submit" class="btn btn-primary" value="Upload"> Submit </button>
                     </form>
                     <br></br>
-                    <h3 class="result">{{massage}}</h3>
+                    <h3 class="{{status}}">{{massage}}</h3>
                 </div>
             </div>
             <br></br>
