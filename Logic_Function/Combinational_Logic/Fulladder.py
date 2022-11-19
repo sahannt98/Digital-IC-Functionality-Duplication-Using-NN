@@ -1,9 +1,9 @@
 import numpy as np
 
 class Fulladder:
-    def __init__(self, NumberOfElement=10000):
+    def __init__(self, NumberOfElement=10000,pinlen=5):
         self.NumberOfElement = NumberOfElement
-        self.pinlen = 5
+        self.pinlen = pinlen
 
     def Fulladder_gate(self):
         A = np.array(np.random.randint(0,high=2,size=(self.NumberOfElement, self.pinlen)),dtype='int')
@@ -16,7 +16,7 @@ class Fulladder:
             Y = self.__binary_sum(A[count],B[count])
             Y_.append(Y)
         X_ = np.array(X_)
-        Y_ = np.array(Y_)
+        Y_ = np.array(Y_,dtype=object)
         return X_, Y_
 
     def __binary_sum(self,A,B):

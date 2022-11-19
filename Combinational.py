@@ -3,8 +3,10 @@ from keras.models import Sequential
 from keras.layers.core import Dense
 
 class Combinational:
-    def __init__(self,X,Y):
-        lenth_of_train_set = int(len(X)*0.95)
+    def __init__(self,X, Y, input_len, output_len):
+        self.input_len = input_len
+        self.output_len = output_len
+        lenth_of_train_set = int(len(X)*0.9)
         self.input_train = X[:lenth_of_train_set]
         self.output_train = Y[:lenth_of_train_set]
         self.input_test = X[lenth_of_train_set:]
@@ -15,10 +17,10 @@ class Combinational:
 
     def __CreateModel(self):
         self.model = Sequential()
-        self.model.add(Dense(50, input_dim=10, activation='relu'))
+        self.model.add(Dense(50, input_dim=self.input_len, activation='relu'))
         self.model.add(Dense(30, input_dim=50, activation='sigmoid'))
         self.model.add(Dense(18, input_dim=30, activation='relu'))
-        self.model.add(Dense(6, activation='sigmoid'))
+        self.model.add(Dense(self.output_len, activation='sigmoid'))
         self.model.compile(loss='mean_squared_error',optimizer='adam', metrics=['binary_accuracy'])
 
     def __TrainModel(self):

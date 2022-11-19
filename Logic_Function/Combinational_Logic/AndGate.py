@@ -1,9 +1,9 @@
 import numpy as np
 
 class AndGate:
-    def __init__(self,NumberOfElement = 10000):
+    def __init__(self,NumberOfElement = 10000,Xlen=2):
         self.NumberOfElement = NumberOfElement
-        self.Xlen = 2
+        self.Xlen = Xlen
         self.Ylen = 1
 
     def And_Get(self):
