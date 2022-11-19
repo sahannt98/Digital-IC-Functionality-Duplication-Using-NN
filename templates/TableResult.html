@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body{
+            overflow: hidden;
+            height: 100vh;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .topic{
+            height: 15vh;
+            width: 100%;
+            color: white;
+            background-color: black;
+        }
+        .topic_of_project{
+            padding-top: 3vh;
+            text-align: center;
+        
+        }
+        .body{
+            height: 85vh;
+            width: 100%;
+            background-color: rgb(0, 0, 0);
+            display: flex;
+            color: white;
+        }
+        .box{
+            height: 70vh;
+            width: 70%;
+            margin: auto;   
+            padding: 1vh;
+            display: flex;
+        }
+        .select{
+            height: 100%;
+            width: 100%;
+            display: flex;
+        }
+        .select_form{
+            width: 90%;
+            margin: auto;
+        }
+
+        .imagebox{
+            height: 100%;
+            width: 100%;
+        }
+        .imagebox img{
+            height: 100%;
+            width: 100%;
+            object-fit: fill;
+        }
+        .result{
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color:black;
+            height: 10vh;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            font-size: large;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            background-color: black;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="topic">
+        <ul>
+            <li><a href="{{url_for('home')}}">Create Truth Table</a></li>
+            <li><a href="{{url_for('Traing_model')}}">Traing and Test Model</a></li>
+        </ul>
+            <h1 class="topic_of_project"><u>DIGITAL FUNCTIONALITY DUPLICATION</u></h1>
+    </div>
+    <div class="body">
+        <div class="box">
+            <div class="select">
+                <div class="select_form">
+                    <form action = "{{url_for('make_truth_table')}}" method = "post">
+                        <div class="form-group" style="display:flex;">
+                          <label for="Length_of_dataset" style="padding-right: 7px; width: 50%;">Length of dataset</label>
+                          <input type="number" class="form-control" id="Length_of_dataset" name="Length_of_dataset" required>
+                        </div>
+                        <div class="form-group" style="display:flex;">
+                            <label for="Logic_funtion" style="padding-right: 7px; width: 50%;">Logic funtion</label>
+                            <input type="text" class="form-control" id="Logic_funtion" name="Logic_funtion" required>
+                        </div>
+                        <div class="form-group" style="display:flex;">
+                            <label for="Table_Name" style="padding-right: 7px; width: 50%;">Table Name</label>
+                            <input type="text" class="form-control" id="Table_Name" name="Table_Name" required>
+                        </div>
+                        <div class="form-group" style="display:flex;">
+                            <label for="input_len" style="padding-right: 7px; width: 50%;">Input bit length</label>
+                            <input type="text" class="form-control" id="input_len" name="input_len">
+                        </div>
+                        <div class="form-group" style="display:flex;">
+                            <label for="output_len" style="padding-right: 7px; width: 50%;">Output bit length</label>
+                            <input type="text" class="form-control" id="output_len" name="output_len">
+                        </div>
+                        <button type="submit" class="btn btn-primary" value="Upload"> Submit </button>
+                    </form>
+                    <br></br>
+                    <h3 class="result">{{massage}}</h3>
+                </div>
+            </div>
+            <br></br>
+            <div class="imagebox">
+                <img src= "{{url_for('static', filename='img.jpg')}}"   alt="">
+            </div>
+        </div>
+    </div>
+    <script>
+        const input = document.querySelector("input");
+        input.onchange = (e) => {
+        const [file] = e.target.files;
+        document.getElementById("customFileLanglable").innerHTML = file.name;
+        }
+    </script>
+</body>
+</html>
