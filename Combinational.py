@@ -3,14 +3,15 @@ from keras.models import Sequential
 from keras.layers.core import Dense
 
 class Combinational:
-    def __init__(self,X, Y):
+    def __init__(self,X, Y, Percentage, Number_of_epochs):
         self.input_len = len(X[0])
         self.output_len = len(Y[0])
-        lenth_of_train_set = int(len(X)*0.9)
+        lenth_of_train_set = int(len(X)*(Percentage/100))
         self.input_train = X[:lenth_of_train_set]
         self.output_train = Y[:lenth_of_train_set]
         self.input_test = X[lenth_of_train_set:]
         self.output_test = Y[lenth_of_train_set:]
+        self.Number_of_epochs = Number_of_epochs
 
 
     def getAcurasy(self):
@@ -28,7 +29,7 @@ class Combinational:
         self.model.compile(loss='mean_squared_error',optimizer='adam', metrics=['binary_accuracy'])
 
     def __TrainModel(self):
-        self.model.fit(self.input_train, self.output_train, epochs=30, verbose=2)
+        self.model.fit(self.input_train, self.output_train, epochs=self.Number_of_epochs, verbose=2)
 
     def __TestModel(self):
         currect_count = 0

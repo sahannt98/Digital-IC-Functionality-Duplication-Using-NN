@@ -47,7 +47,7 @@ def Traing_model():
         try:
             Mysql_Configure = MysqlConfigure()
             X,Y = Mysql_Configure.GetData(Table_Name)
-            Model = Combinational(X, Y)
+            Model = Combinational(X, Y, Percentage, Number_of_epochs)
             Acurassy = Model.getAcurasy()
             return render_template('result.html', massage=Acurassy)
         except:
