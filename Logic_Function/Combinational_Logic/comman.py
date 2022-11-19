@@ -8,7 +8,8 @@ class comman:
         self.NumberOfElement = NumberOfElement
 
     def make_truth_table(self):
-        X_ = np.array(np.random.randint(0,high=2,size=(self.NumberOfElement, self.input_pin)),dtype='int')
+        X = np.array(np.random.randint(0,high=2,size=(self.NumberOfElement, self.input_pin)),dtype='bool')
+        X_ = np.vectorize(self.__boolstr_to_floatstr)(X).astype(int)
         Y_ = np.zeros((self.NumberOfElement, self.output_pin),dtype='int')
         for i in range(len(Y_)):
             for j in range(len(Y_[i])):
@@ -28,8 +29,13 @@ class comman:
         logic = ""
         for i in stringoflogic:
             if i in list_of_cap:
-                logic += "X_[i][{}]".format(list_of_cap.index(i))
+                logic += "X[i][{}]".format(list_of_cap.index(i))
             else:
                 logic +=i
         return logic
 
+    def __boolstr_to_floatstr(self,v):
+        if v == True:
+            return 1
+        elif v == False:
+            return 0
