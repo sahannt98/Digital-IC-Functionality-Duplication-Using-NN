@@ -1,5 +1,5 @@
 # DIGITAL-IC-FUNCTIONALITY-DUPLICATION
-### Dependancy
+### Dependencies 
 ```
 pip install numpy
 pip install mysql-connector-python
