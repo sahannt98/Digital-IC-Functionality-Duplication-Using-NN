@@ -1,8 +1,8 @@
 # DIGITAL-IC-FUNCTIONALITY-DUPLICATION
 ### Dependancy
 ```
-<p>pip install numpy
-<p>pip install mysql-connector-python
-<p>pip install tensorflow
-<p>pip install Flask
+pip install numpy
+pip install mysql-connector-python
+pip install tensorflow
+pip install Flask
 ```
