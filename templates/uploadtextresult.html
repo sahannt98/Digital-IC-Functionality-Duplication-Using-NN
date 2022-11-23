@@ -99,8 +99,8 @@
     <div class="topic">
         <ul>
             <li><a href="{{url_for('home')}}">Create Truth Table</a></li>
-            <li><a href="{{url_for('Uplode_file')}}">Uplode the text document</a></li>
-            <li><a href="{{url_for('Traing_model')}}">Traing and Test Model</a></li>
+            <li><a href="{{url_for('Upload_file')}}">Upload the text document</a></li>
+            <li><a href="{{url_for('Training_model')}}">Model Training and Testing</a></li>
         </ul>
             <h1 class="topic_of_project"><u>DIGITAL FUNCTIONALITY DUPLICATION</u></h1>
     </div>
@@ -108,7 +108,7 @@
         <div class="box">
             <div class="select">
                 <div class="select_form">
-                    <form action = "{{url_for('Uplode_file')}}" method = "post", enctype="multipart/form-data">
+                    <form action = "{{url_for('Upload_file')}}" method = "post", enctype="multipart/form-data">
                         <div class="form-group" style="display:flex;">
                             <label for="Input_pin" style="padding-right: 7px; width: 50%;">Number of input pin</label>
                             <input type="number" class="form-control" id="Input_pin" name="Input_pin" required>
