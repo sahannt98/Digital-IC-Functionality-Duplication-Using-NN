@@ -90,6 +90,7 @@
     <div class="topic">
         <ul>
             <li><a href="{{url_for('home')}}">Create Truth Table</a></li>
+            <li><a href="{{url_for('Uplode_file')}}">Uplode the text document</a></li>
             <li><a href="{{url_for('Traing_model')}}">Traing and Test Model</a></li>
         </ul>
             <h1 class="topic_of_project"><u>DIGITAL FUNCTIONALITY DUPLICATION</u></h1>
@@ -113,11 +114,11 @@
                         </div>
                         <div class="form-group" style="display:flex;">
                             <label for="input_len" style="padding-right: 7px; width: 50%;">Input bit length</label>
-                            <input type="text" class="form-control" id="input_len" name="input_len">
+                            <input type="number" class="form-control" id="input_len" name="input_len">
                         </div>
                         <div class="form-group" style="display:flex;">
                             <label for="output_len" style="padding-right: 7px; width: 50%;">Output bit length</label>
-                            <input type="text" class="form-control" id="output_len" name="output_len">
+                            <input type="number" class="form-control" id="output_len" name="output_len">
                         </div>
                         <button type="submit" class="btn btn-primary" value="Upload"> Submit </button>
                     </form>

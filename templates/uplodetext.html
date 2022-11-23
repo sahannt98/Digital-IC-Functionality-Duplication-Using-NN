@@ -42,13 +42,13 @@
         .select{
             height: 100%;
             width: 100%;
-            margin: auto;
             display: flex;
         }
-        .result{
-            text-align: center;
+        .select_form{
+            width: 90%;
             margin: auto;
         }
+
         .imagebox{
             height: 100%;
             width: 100%;
@@ -98,7 +98,34 @@
     <div class="body">
         <div class="box">
             <div class="select">
-                <h3 class="result">Acuraccy: {{massage}}%</h3>
+                <div class="select_form">
+                    <form action = "{{url_for('Uplode_file')}}" method = "post", enctype="multipart/form-data">
+                        <div class="form-group" style="display:flex;">
+                            <label for="Input_pin" style="padding-right: 7px; width: 50%;">Number of input pin</label>
+                            <input type="number" class="form-control" id="Input_pin" name="Input_pin" required>
+                        </div>
+                        <div style="display: flex;">
+                            <label for="customFileLang" style="padding-right: 7px; width: 50%;">Select the file</label>
+                            <div class="custom-file" style="padding-bottom: 45px;">
+                                <label class="custom-file-label" for="customFileLang" id="customFileLanglable" >Select the file</label>
+                                <input type="file" class="custom-file-input" id="customFileLang" lang="es" name="file" required> 
+                            </div>
+                        </div>
+                        <div class="form-group" style="display:flex;">
+                              <label for="Table_Name" style="padding-right: 7px; width: 50%;">Table Name</label>
+                              <input type="text" class="form-control" id="Table_Name" name="Table_Name" required>
+                        </div>
+                        <div class="form-group" style="display:flex;">
+                              <label for="input_len" style="padding-right: 7px; width: 50%;">Input bit length</label>
+                              <input type="number" class="form-control" id="input_len" name="input_len">
+                        </div>
+                        <div class="form-group" style="display:flex;">
+                              <label for="output_len" style="padding-right: 7px; width: 50%;">Output bit length</label>
+                              <input type="number" class="form-control" id="output_len" name="output_len">
+                        </div>
+                        <button type="submit" class="btn btn-primary" value="Upload"> Submit </button>
+                    </form>
+                </div>
             </div>
             <div class="imagebox">
                 <img src= "{{url_for('static', filename='img.jpg')}}"   alt="">

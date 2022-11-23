@@ -2,13 +2,13 @@ import numpy as np
 import mysql.connector
 
 class MysqlConfigure:
-    def __init__(self,input_len = 50,output_len = 10, host="localhost", user="root", password="ayesh"):
+    def __init__(self,input_len = 50,output_len = 10, host="bi6wzccgy8yzblh9m3le-mysql.services.clever-cloud.com", user="u5ogzfgm6kwrjqxr", password="Ueq8ZpwPEc3UHTGOcvRs"):
         self.input_len = input_len
         self.output_len = output_len
         self.mydb = mysql.connector.connect(host=host, user=user, password=password)
         self.mycursor = self.mydb.cursor(buffered=True)
         self.__createDatabase()
-        self.mydb = mysql.connector.connect(host=host, user=user, password=password, database = "digital_functionality_duplication")
+        self.mydb = mysql.connector.connect(host=host, user=user, password=password, database = "bi6wzccgy8yzblh9m3le")
         self.mycursor = self.mydb.cursor(buffered=True)
 
     def PushData(self,X,Y,Table_name):
@@ -30,10 +30,10 @@ class MysqlConfigure:
     def __createDatabase(self):
         self.mycursor.execute("SHOW DATABASES")
         for x in self.mycursor:
-            if x[0] == "digital_functionality_duplication":
+            if x[0] == "bi6wzccgy8yzblh9m3le":
                 break
         else:
-            self.mycursor.execute("CREATE DATABASE digital_functionality_duplication")
+            self.mycursor.execute("CREATE DATABASE bi6wzccgy8yzblh9m3le")
 
     def __createTabale(self,Table_name):
         self.mycursor.execute("SHOW TABLES")
