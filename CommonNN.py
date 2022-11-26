@@ -35,11 +35,11 @@ class CommonNN:
 
     def __CreateModel(self):
         self.model = Sequential()
-        self.model.add(LSTM(40, input_shape=self.input_train[0].shape, activation='relu',return_sequences=True))
-        self.model.add(LSTM(20, activation='relu',return_sequences=True))
+        self.model.add(LSTM(40, input_shape=self.input_train[0].shape, activation='tanh',return_sequences=True))
+        self.model.add(LSTM(20, activation='tanh',return_sequences=True))
         self.model.add(layers.Flatten())
-        self.model.add(Dense(10, activation='sigmoid'))
-        self.model.add(Dense(self.output_len, activation='sigmoid'))
+        self.model.add(Dense(10, activation='tanh'))
+        self.model.add(Dense(self.output_len, activation='tanh'))
         print(self.model.summary())
         '''
         self.model = Sequential()
