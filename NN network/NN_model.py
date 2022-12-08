@@ -31,9 +31,9 @@ for i in range(len(X)):
 
 def rearagedataset(X, Y):
     Sequential_X = []
-    Sequential_Y = Y[10:]
-    for i in range(len(X) - 10):
-        Sequential_X.append(X[i:i + 10])
+    Sequential_Y = Y[20:]
+    for i in range(len(X) - 20):
+        Sequential_X.append(X[i:i + 20])
     Sequential_X = np.array(Sequential_X)
     Sequential_Y = np.array(Sequential_Y)
     return Sequential_X, Sequential_Y
@@ -55,12 +55,4 @@ model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation='sigmoid',retur
 model.add(Dense(3,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
 model.summary()
 model.compile(loss='binary_crossentropy',optimizer='adam', metrics=['binary_accuracy'])
-model.fit(Sequential_X, Sequential_Y, epochs=50,verbose=2)
-
-# kwargs = dict(kernel_initializer=tf.keras.initializers.RandomUniform(minval=0.4, maxval=0.42, seed=None),bias_initializer ='uniform')
-# model = tf.keras.Sequential(name='Training_Sequential_Module')
-# model.add(layers.LSTM(n_LSTM1, return_sequences=True, input_shape=(None, self.modelIn),**kwargs,recurrent_initializer='Zeros' ))
-# model.add(layers.Dense(self.modelOut,**kwargs))
-# model.add(layers.Activation("sigmoid"))
-# model.summary()
-# CreateTestModel(n_LSTM1,Ninputs,Noutputs)
+model.fit(Sequential_X, Sequential_Y, epochs=10,verbose=2)
