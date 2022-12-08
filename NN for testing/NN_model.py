@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Dense, LSTM
 from tensorflow.keras import layers, initializers
 
 number_of_input = 1
-f1 = open("D:\\Aca\\FYP\\GitHub\\FYP_Codes\\New folder\\DIGITAL-FUNCTIONALITY-DUPLICATION\\NN network\\5bit_counter.txt", "r")
+f1 = open("D:\\Aca\\FYP\\GitHub\\FYP_Codes\\New folder\\DIGITAL-FUNCTIONALITY-DUPLICATION\\NN network\\4bit_counter.txt", "r")
 X = []
 Y = []
 count = 1
