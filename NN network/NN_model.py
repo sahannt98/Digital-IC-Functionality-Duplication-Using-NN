@@ -4,8 +4,8 @@ from keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM
 from tensorflow.keras import layers, initializers
 
-number_of_input = 2
-f1 = open("D:\\Aca\\FYP\\GitHub\\FYP_Codes\\New folder\\DIGITAL-FUNCTIONALITY-DUPLICATION\\NN network\\2_input_3bit_counter.txt", "r")
+number_of_input = 1
+f1 = open("D:\\Aca\\FYP\\GitHub\\FYP_Codes\\New folder\\DIGITAL-FUNCTIONALITY-DUPLICATION\\NN network\\1_input_3bit_counter.txt", "r")
 X = []
 Y = []
 count = 1
