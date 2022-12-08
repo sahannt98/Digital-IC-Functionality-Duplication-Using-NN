@@ -2,13 +2,13 @@ import numpy as np
 import mysql.connector
 
 class MysqlConfigure:
-    def __init__(self,input_len = 50,output_len = 10, host="bi6wzccgy8yzblh9m3le-mysql.services.clever-cloud.com", user="u5ogzfgm6kwrjqxr", password="Ueq8ZpwPEc3UHTGOcvRs"):
+    def __init__(self,input_len = 50,output_len = 10, host="localhost", user="root", password="180060"):
         self.input_len = input_len
         self.output_len = output_len
         self.mydb = mysql.connector.connect(host=host, user=user, password=password)
         self.mycursor = self.mydb.cursor(buffered=True)
         self.__createDatabase()
-        self.mydb = mysql.connector.connect(host=host, user=user, password=password, database = "bi6wzccgy8yzblh9m3le")
+        self.mydb = mysql.connector.connect(host=host, user=user, password=password, database = "digital_functionality_duplication")
         self.mycursor = self.mydb.cursor(buffered=True)
 
     def PushData(self,X,Y,Table_name):
