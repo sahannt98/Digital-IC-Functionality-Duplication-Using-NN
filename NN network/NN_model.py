@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Dense, LSTM
 from tensorflow.keras import layers, initializers
 
 number_of_input = 1
-f1 = open("D:\\Aca\\FYP\\GitHub\\FYP_Codes\\New folder\\DIGITAL-FUNCTIONALITY-DUPLICATION\\NN network\\4bit_counter.txt", "r")
+f1 = open("D:\\Aca\\FYP\\GitHub\\FYP_Codes\\New folder\\DIGITAL-FUNCTIONALITY-DUPLICATION\\NN network\\5bit_counter.txt", "r")
 X = []
 Y = []
 count = 1
@@ -54,7 +54,7 @@ model.add(LSTM(32,return_sequences=False))
 # model.add(layers.Flatten())
 # model.add(Dense(10, activation='tanh'))
 
-model.add(Dense(4,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
+model.add(Dense(5,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
 model.summary()
 model.compile(loss='binary_crossentropy',optimizer='adam', metrics=['binary_accuracy'])
 model.fit(Sequential_X, Sequential_Y, epochs=200,verbose=2)
