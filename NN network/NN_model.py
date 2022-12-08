@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Dense, LSTM
 from tensorflow.keras import layers, initializers
 
 number_of_input = 2
-f1 = open("2_input_3bit_counter.txt", "r")
+f1 = open("D:\\Aca\\FYP\\GitHub\\FYP_Codes\\New folder\\DIGITAL-FUNCTIONALITY-DUPLICATION\\NN network\\2_input_3bit_counter.txt", "r")
 X = []
 Y = []
 count = 1
@@ -45,8 +45,8 @@ print("input_shape ",Sequential_X[0].shape)
 
 model = Sequential()
 # model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,return_sequences=False,stateful=True,batch_size=32,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
-model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation='sigmoid',return_sequences=False,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
-# model.add(LSTM(32,return_sequences=False))
+model.add(LSTM(128, input_shape=Sequential_X[0].shape, activation=None,return_sequences=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
+model.add(LSTM(32,return_sequences=False))
 
 # model.add(LSTM(20, activation='tanh',return_sequences=True))
 # model.add(layers.Flatten())
