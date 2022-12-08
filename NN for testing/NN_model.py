@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Dense, LSTM
 from tensorflow.keras import layers, initializers
 
 number_of_input = 1
-f1 = open("D:\\Aca\\FYP\\GitHub\\FYP_Codes\\New folder\\DIGITAL-FUNCTIONALITY-DUPLICATION\\NN network\\4bit_counter.txt", "r")
+f1 = open("D:\\Aca\\FYP\\GitHub\\FYP_Codes\\New folder\\DIGITAL-FUNCTIONALITY-DUPLICATION\\NN for testing\\3bit_counter.txt", "r")
 X = []
 Y = []
 count = 1
@@ -46,15 +46,15 @@ print("output_shape ",Sequential_Y[0].shape,"\n")
 
 
 model = Sequential()
-# model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,return_sequences=False,stateful=True,batch_size=32,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
-model.add(LSTM(128, input_shape=Sequential_X[0].shape, activation=None,return_sequences=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
-model.add(LSTM(32,return_sequences=False))
+model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,return_sequences=False,stateful=True,batch_size=32,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
+# model.add(LSTM(128, input_shape=Sequential_X[0].shape, activation=None,return_sequences=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
+# model.add(LSTM(32,return_sequences=False))
 
 # model.add(LSTM(20, activation='tanh',return_sequences=True))
 # model.add(layers.Flatten())
 # model.add(Dense(10, activation='tanh'))
 
-model.add(Dense(5,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
+model.add(Dense(3,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
 model.summary()
 model.compile(loss='binary_crossentropy',optimizer='adam', metrics=['binary_accuracy'])
-model.fit(Sequential_X, Sequential_Y, epochs=200,verbose=2)
+model.fit(Sequential_X, Sequential_Y, epochs=300,verbose=2)
