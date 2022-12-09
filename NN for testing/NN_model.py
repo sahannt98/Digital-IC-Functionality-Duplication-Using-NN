@@ -1,3 +1,4 @@
+import os
 import wandb
 from wandb.keras import WandbCallback
 import numpy as np
@@ -8,8 +9,11 @@ from tensorflow.keras import layers, initializers
 
 wandb.init(project="test-project", entity="ic-functionality-duplication")
 
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'datasets/4bit_counter.txt')
+
 number_of_input = 1
-f1 = open("D:\\Aca\\FYP\\GitHub\\FYP_Codes\\New folder\\DIGITAL-FUNCTIONALITY-DUPLICATION\\NN for testing\\4bit_counter.txt", "r")
+f1 = open(filename, "r")
 X = []
 Y = []
 count = 1
