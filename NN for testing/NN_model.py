@@ -1,11 +1,19 @@
+import os
+import wandb
+from wandb.keras import WandbCallback
 import numpy as np
 import tensorflow as tf
 from keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM
 from tensorflow.keras import layers, initializers
 
+wandb.init(project="test-project", entity="ic-functionality-duplication")
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'datasets/4bit_counter.txt')
+
 number_of_input = 1
-f1 = open("D:\\Aca\\FYP\\GitHub\\FYP_Codes\\New folder\\DIGITAL-FUNCTIONALITY-DUPLICATION\\NN for testing\\5bit_counter.txt", "r")
+f1 = open(filename, "r")
 X = []
 Y = []
 count = 1
@@ -54,7 +62,7 @@ model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,return_seq
 # model.add(layers.Flatten())
 # model.add(Dense(10, activation='tanh'))
 
-model.add(Dense(5,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
+model.add(Dense(4,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
 model.summary()
 model.compile(loss='binary_crossentropy',optimizer='adam', metrics=['binary_accuracy'])
-model.fit(Sequential_X, Sequential_Y, epochs=1000,verbose=2)
+model.fit(Sequential_X, Sequential_Y, epochs=1000, verbose=2, callbacks=[WandbCallback()])
