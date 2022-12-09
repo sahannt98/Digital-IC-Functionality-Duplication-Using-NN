@@ -9,6 +9,6 @@ pip install Flask
 
 ### _Links_ 
 
-### [Git Repository](https://github.com/Ayesh-Rajakaruna/DIGITAL-FUNCTIONALITY-DUPLICATION)
+## [Git Repository](https://github.com/Ayesh-Rajakaruna/DIGITAL-FUNCTIONALITY-DUPLICATION)
 
-### [Weights & Biases – Developer tools for ML](https://wandb.ai/ic-functionality-duplication)
+## [Weights & Biases – Developer tools for ML](https://wandb.ai/ic-functionality-duplication)
