@@ -1,0 +1,50 @@
+{
+    "os": "Windows-10-10.0.19041-SP0",
+    "python": "3.7.0",
+    "heartbeatAt": "2022-12-09T11:56:02.046896",
+    "startedAt": "2022-12-09T11:56:00.127130",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "d:/Aca/FYP/GitHub/FYP_Codes/New folder/DIGITAL-FUNCTIONALITY-DUPLICATION/NN for testing/NN_model.py",
+    "codePath": "NN for testing\\NN_model.py",
+    "git": {
+        "remote": "https://github.com/Ayesh-Rajakaruna/DIGITAL-FUNCTIONALITY-DUPLICATION.git",
+        "commit": "8d8a56fbd771a8111d523b90e5beb601cebc0bab"
+    },
+    "email": "57900949+Anjanamb@users.noreply.github.com",
+    "root": "D:/Aca/FYP/GitHub/FYP_Codes/New folder/DIGITAL-FUNCTIONALITY-DUPLICATION",
+    "host": "DESKTOP-C5FHC0L",
+    "username": "Anjana",
+    "executable": "C:\\Python37\\cv\\Scripts\\python.exe",
+    "cpu_count": 4,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 2592.0,
+        "min": 0.0,
+        "max": 2592.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2592.0,
+            "min": 0.0,
+            "max": 2592.0
+        }
+    ],
+    "disk": {
+        "total": 249.39159774780273,
+        "used": 132.3447723388672
+    },
+    "gpu": "GeForce GTX 950M",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "GeForce GTX 950M",
+            "memory_total": 4294967296
+        }
+    ],
+    "memory": {
+        "total": 11.897872924804688
+    }
+}

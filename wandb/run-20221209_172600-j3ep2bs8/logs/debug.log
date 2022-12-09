@@ -1,0 +1,25 @@
+2022-12-09 17:26:00,210 INFO    MainThread:6568 [wandb_setup.py:_flush():68] Configure stats pid to 6568
+2022-12-09 17:26:00,210 INFO    MainThread:6568 [wandb_setup.py:_flush():68] Loading settings from C:\Users\Anjana\.config\wandb\settings
+2022-12-09 17:26:00,210 INFO    MainThread:6568 [wandb_setup.py:_flush():68] Loading settings from D:\Aca\FYP\GitHub\FYP_Codes\New folder\DIGITAL-FUNCTIONALITY-DUPLICATION\wandb\settings
+2022-12-09 17:26:00,210 INFO    MainThread:6568 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True'}
+2022-12-09 17:26:00,210 INFO    MainThread:6568 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': 'NN for testing\\NN_model.py', 'program': 'd:/Aca/FYP/GitHub/FYP_Codes/New folder/DIGITAL-FUNCTIONALITY-DUPLICATION/NN for testing/NN_model.py'}
+2022-12-09 17:26:00,211 INFO    MainThread:6568 [wandb_init.py:_log_setup():476] Logging user logs to D:\Aca\FYP\GitHub\FYP_Codes\New folder\DIGITAL-FUNCTIONALITY-DUPLICATION\wandb\run-20221209_172600-j3ep2bs8\logs\debug.log
+2022-12-09 17:26:00,211 INFO    MainThread:6568 [wandb_init.py:_log_setup():477] Logging internal logs to D:\Aca\FYP\GitHub\FYP_Codes\New folder\DIGITAL-FUNCTIONALITY-DUPLICATION\wandb\run-20221209_172600-j3ep2bs8\logs\debug-internal.log
+2022-12-09 17:26:00,211 INFO    MainThread:6568 [wandb_init.py:init():516] calling init triggers
+2022-12-09 17:26:00,211 INFO    MainThread:6568 [wandb_init.py:init():520] wandb.init called with sweep_config: {}
+config: {}
+2022-12-09 17:26:00,211 INFO    MainThread:6568 [wandb_init.py:init():569] starting backend
+2022-12-09 17:26:00,211 INFO    MainThread:6568 [wandb_init.py:init():573] setting up manager
+2022-12-09 17:26:00,222 INFO    MainThread:6568 [backend.py:_multiprocessing_setup():104] multiprocessing start_methods=spawn, using: spawn
+2022-12-09 17:26:00,230 INFO    MainThread:6568 [wandb_init.py:init():580] backend started and connected
+2022-12-09 17:26:00,234 INFO    MainThread:6568 [wandb_init.py:init():658] updated telemetry
+2022-12-09 17:26:00,289 INFO    MainThread:6568 [wandb_init.py:init():694] communicating run to backend with 60 second timeout
+2022-12-09 17:26:01,248 INFO    MainThread:6568 [wandb_run.py:_on_init():2006] communicating current version
+2022-12-09 17:26:01,556 INFO    MainThread:6568 [wandb_run.py:_on_init():2010] got version response 
+2022-12-09 17:26:01,556 INFO    MainThread:6568 [wandb_init.py:init():728] starting run threads in backend
+2022-12-09 17:26:02,259 INFO    MainThread:6568 [wandb_run.py:_console_start():1986] atexit reg
+2022-12-09 17:26:02,259 INFO    MainThread:6568 [wandb_run.py:_redirect():1844] redirect: SettingsConsole.WRAP_RAW
+2022-12-09 17:26:02,260 INFO    MainThread:6568 [wandb_run.py:_redirect():1909] Wrapping output streams.
+2022-12-09 17:26:02,260 INFO    MainThread:6568 [wandb_run.py:_redirect():1931] Redirects installed.
+2022-12-09 17:26:02,261 INFO    MainThread:6568 [wandb_init.py:init():765] run started, returning control to user process
+2022-12-09 17:26:37,477 WARNING MsgRouterThr:6568 [router.py:message_loop():77] message_loop has been closed
