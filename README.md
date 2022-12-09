@@ -5,6 +5,7 @@ pip install numpy
 pip install mysql-connector-python
 pip install tensorflow
 pip install Flask
+pip install wandb
 ```
 
 ### _Links_ 
