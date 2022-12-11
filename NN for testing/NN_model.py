@@ -54,7 +54,7 @@ print("output_shape ",Sequential_Y[0].shape,"\n")
 
 
 model = Sequential()
-model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,batch_size=64,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',unroll=True))
+model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,batch_size=32,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
 # model.add(LSTM(128, input_shape=Sequential_X[0].shape, activation=None,return_sequences=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
 # model.add(LSTM(32,return_sequences=False))
 
@@ -65,4 +65,24 @@ model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,recurrent_
 model.add(Dense(6,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
 model.summary()
 model.compile(loss='binary_crossentropy',optimizer='adam', metrics=['binary_accuracy'])
-model.fit(Sequential_X, Sequential_Y, epochs=1000, verbose=2, callbacks=[WandbCallback()])
+
+# fit network
+for i in range(4000):
+    model.fit(Sequential_X, Sequential_Y, epochs=1, verbose=2, shuffle=False, callbacks=[WandbCallback()])
+    model.reset_states()
+
+# # summarize performance of the model
+# scores = model.evaluate(Sequential_X, Sequential_Y, verbose=0)
+# print("Model Accuracy: %.2f%%" % (scores[1]*100))
+
+
+# # demonstrate some model predictions
+# seed = [char_to_int[alphabet[0]]]
+# for i in range(0, len(alphabet)-1):
+#  x = np.reshape(seed, (1, len(seed), 1))
+#  x = x / float(len(alphabet))
+#  prediction = model.predict(x, verbose=0)
+#  index = np.argmax(prediction)
+#  print(int_to_char[seed[0]], "->", int_to_char[index])
+#  seed = [index]
+# model.reset_states()
