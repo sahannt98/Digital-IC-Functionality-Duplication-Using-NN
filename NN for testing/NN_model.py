@@ -10,7 +10,7 @@ from tensorflow.keras import layers, initializers
 wandb.init(project="test-project", entity="ic-functionality-duplication")
 
 dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, 'datasets/4bit_counter.txt')
+filename = os.path.join(dirname, 'datasets/RingCounter_6bit.txt')
 
 number_of_input = 1
 f1 = open(filename, "r")
@@ -54,7 +54,7 @@ print("output_shape ",Sequential_Y[0].shape,"\n")
 
 
 model = Sequential()
-model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,return_sequences=False,stateful=True,batch_size=32,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
+model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,batch_size=64,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',unroll=True))
 # model.add(LSTM(128, input_shape=Sequential_X[0].shape, activation=None,return_sequences=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
 # model.add(LSTM(32,return_sequences=False))
 
@@ -62,7 +62,7 @@ model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,return_seq
 # model.add(layers.Flatten())
 # model.add(Dense(10, activation='tanh'))
 
-model.add(Dense(4,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
+model.add(Dense(6,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
 model.summary()
 model.compile(loss='binary_crossentropy',optimizer='adam', metrics=['binary_accuracy'])
 model.fit(Sequential_X, Sequential_Y, epochs=1000, verbose=2, callbacks=[WandbCallback()])
