@@ -69,6 +69,14 @@ def createModel(i_shape, b_size, Outputs, k_initializer):
     return model
 
 
+# creating the NN model for testing (with batch size = 1)
+def newModel(i_shape, Outputs, k_initializer):
+    model = Sequential()
+    model.add(LSTM(64, input_shape=i_shape, batch_size=1, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
+    model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
+    return model
+
+
 # fit network / training
 def trainModel(model,Sequential_X, Sequential_Y,Epochs):
     for i in range(Epochs):
@@ -77,11 +85,11 @@ def trainModel(model,Sequential_X, Sequential_Y,Epochs):
         model.reset_states()
 
 
-# copy weights
-def copyWeights(model):
+# copy weights & compile the model
+def copyWeights(model, newModel):
     old_weights = model.get_weights()
-    # new_model.set_weights(old_weights)
-    return old_weights
+    newModel.set_weights(old_weights)
+    newModel.compile(loss='binary_crossentropy', optimizer='adam')
 
 
 number_of_inputs = 1
@@ -91,8 +99,10 @@ Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_)
 k_initializer=initializers.RandomUniform(minval=0.4, maxval=0.42, seed=None)
 model = createModel(Sequential_X[0].shape, 32, 6, k_initializer)
 trainModel(model, Sequential_X, Sequential_Y, 5)
-Weights = copyWeights(model)
-print(Weights)
+# new_model = newModel(i_shape, Outputs, k_initializer)
+# Weights = copyWeights(model,new_model)
+
+
 
 # for debugging purposes
 print("\ninput_shape ",Sequential_X[0].shape,"\n")
@@ -106,18 +116,9 @@ print("output_3dArray_shape ",Sequential_Y.shape,"\n")
 
 
 
-# # summarize performance of the model
-# scores = model.evaluate(Sequential_X, Sequential_Y, verbose=0)
-# print("Model Accuracy: %.2f%%" % (scores[1]*100))
-
-
-# # demonstrate some model predictions
-# seed = [char_to_int[alphabet[0]]]
-# for i in range(0, len(alphabet)-1):
-#  x = np.reshape(seed, (1, len(seed), 1))
-#  x = x / float(len(alphabet))
-#  prediction = model.predict(x, verbose=0)
-#  index = np.argmax(prediction)
-#  print(int_to_char[seed[0]], "->", int_to_char[index])
-#  seed = [index]
-# model.reset_states()
+# # online forecast
+# for i in range(len(X)):
+#  testX, testy = X[i], y[i]
+#  testX = testX.reshape(1, 1, 1)
+#  yhat = new_model.predict(testX, batch_size=n_batch)
+#  print('>Expected=%.1f, Predicted=%.1f' % (testy, yhat))
