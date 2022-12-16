@@ -11,7 +11,7 @@ from tensorflow.keras import layers, initializers
 
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname, 'datasets/RingCounter_6bit.txt')
-batch_size = 64
+batch_size = 128
 
 def readFile(file, number_of_input):
     f1 = open(file, "r")
@@ -42,11 +42,14 @@ def intializeDataSet(X,Y):
     return X_,Y_
 
 
-def reArangeDataSet(X, Y):
+def reArangeDataSet(X, Y, batch_size):
     Sequential_X = []
     Sequential_Y = Y[40:]
     for i in range(len(X) - 40):
         Sequential_X.append(X[i:i + 40])
+    Start_pt = len(Sequential_X)%batch_size
+    Sequential_X = Sequential_X[Start_pt:]
+    Sequential_Y = Sequential_Y[Start_pt:]
     Sequential_X = np.array(Sequential_X)
     Sequential_Y = np.array(Sequential_Y)
     return Sequential_X, Sequential_Y
@@ -95,7 +98,7 @@ def copyWeights(model, newModel):
 number_of_inputs = 1
 X,Y = readFile(filename, number_of_inputs)
 X_,Y_ = intializeDataSet(X,Y)
-Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_)
+Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size)
 print("\ninput_shape ",Sequential_X.shape,"\n")
 print("output_shape ",Sequential_Y.shape,"\n")
 
