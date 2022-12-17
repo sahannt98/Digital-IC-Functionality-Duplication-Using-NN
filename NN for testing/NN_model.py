@@ -7,11 +7,6 @@ from keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM
 from tensorflow.keras import layers, initializers
 
-# wandb.init(project="test-project", entity="ic-functionality-duplication")
-
-dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, 'datasets/RingCounter_6bit.txt')
-batch_size = 1
 
 def readFile(file, number_of_input):
     f1 = open(file, "r")
@@ -68,7 +63,7 @@ def createModel(i_shape, b_size, Outputs, k_initializer):
 
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
     model.summary()
-    model.compile(loss='binary_crossentropy',optimizer='adam', metrics=['binary_accuracy'])
+    model.compile(loss='binary_crossentropy',optimizer='rmsprop', metrics=['binary_accuracy'])
     return model
 
 
@@ -95,24 +90,31 @@ def copyWeights(model, newModel):
     newModel.compile(loss='binary_crossentropy', optimizer='adam')
 
 
+# wandb.init(project="test-project", entity="ic-functionality-duplication")
+
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, 'datasets/RingCounter_6bit.txt')
+batch_size = 128
 number_of_inputs = 1
 X,Y = readFile(filename, number_of_inputs)
 X_,Y_ = intializeDataSet(X,Y)
 Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size)
+
+# For debugging
 print("\ninput_shape ",Sequential_X.shape,"\n")
 print("output_shape ",Sequential_Y.shape,"\n")
 
 
 
 
-k_initializer=initializers.RandomUniform(minval=0.4, maxval=0.42, seed=None)
+k_initializer=initializers.RandomUniform(minval=0.410, maxval=0.415, seed=None)
 model = createModel(Sequential_X[0].shape, batch_size, 6, k_initializer)
-trainModel(model, Sequential_X, Sequential_Y, 5, batch_size)
+trainModel(model, Sequential_X, Sequential_Y, 4000, batch_size)
 # new_model = newModel(i_shape, Outputs, k_initializer)
 # Weights = copyWeights(model,new_model)
 
 
-
+# For debugging
 print("\ninput_shape ",Sequential_X[0].shape,"\n")
 print("output_shape ",Sequential_Y[0].shape,"\n")
 print("inpt_3dArray_shape ",Sequential_X.shape,"\n")
