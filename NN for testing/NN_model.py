@@ -97,9 +97,10 @@ def copyWeights(model, newModel):
 # wandb.init(project="test-project", entity="ic-functionality-duplication")
 
 dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, 'datasets/RingCounter_6bit.txt')
+filename_train = os.path.join(dirname, 'datasets/train.txt')
+filename_test = os.path.join(dirname, 'datasets/test.txt')
 batch_size = 128
-number_of_inputs = 1
+number_of_inputs = 2
 time_steps = 40
 X,Y = readFile(filename, number_of_inputs)
 X_,Y_ = intializeDataSet(X,Y)
@@ -113,8 +114,8 @@ print("output_shape ",Sequential_Y.shape,"\n")
 
 
 k_initializer=initializers.RandomUniform(minval=0.410, maxval=0.415, seed=None)
-model = createModel(Sequential_X[0].shape, batch_size, 6, k_initializer)
-trainModel(model, Sequential_X, Sequential_Y, 4000, batch_size)
+model = createModel(Sequential_X[0].shape, batch_size, 3, k_initializer)
+trainModel(model, Sequential_X, Sequential_Y, 1000, batch_size)
 # new_model = newModel(i_shape, Outputs, k_initializer)
 # Weights = copyWeights(model,new_model)
 
