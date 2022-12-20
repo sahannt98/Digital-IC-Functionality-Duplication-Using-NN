@@ -72,9 +72,9 @@ def createModel(i_shape, b_size, Outputs, k_initializer):
 
 
 # creating the NN model for testing (with batch size = 1)
-def newModel(i_shape, Outputs, k_initializer):
+def newModel(i_shape, Outputs, k_initializer,b_size=1):
     model = Sequential()
-    model.add(LSTM(64, input_shape=i_shape, batch_size=1, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
+    model.add(LSTM(64, input_shape=i_shape, batch_size=b_size, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
     return model
 
@@ -94,7 +94,7 @@ def copyWeights(model, newModel):
     newModel.set_weights(old_weights)
     newModel.compile(loss='binary_crossentropy', optimizer='rmsprop')
 
-if __name__ == "main":
+if __name__ == "__main__":
     # wandb.init(project="test-project", entity="ic-functionality-duplication")
 
     dirname = os.path.dirname(__file__)
@@ -103,7 +103,7 @@ if __name__ == "main":
     number_of_inputs = 2
     number_of_oututs = 3
     time_steps = 40
-    epochs = 100
+    epochs = 10
     X,Y = readFile(filename_train, number_of_inputs)
     X_,Y_ = intializeDataSet(X,Y)
     Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size, time_steps)
