@@ -72,9 +72,9 @@ def createModel(i_shape, b_size, Outputs, k_initializer):
 
 
 # creating the NN model for testing (with batch size = 1)
-def newModel(i_shape, Outputs, k_initializer):
+def newModel(i_shape, Outputs, k_initializer,b_size=1):
     model = Sequential()
-    model.add(LSTM(10, input_shape=i_shape, batch_size=1, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
+    model.add(LSTM(64, input_shape=i_shape, batch_size=b_size, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
     return model
 
@@ -85,49 +85,51 @@ def trainModel(model, Sequential_X, Sequential_Y, Epochs, b_size):
         # model.fit(Sequential_X, Sequential_Y, epochs=1, verbose=2, shuffle=False, callbacks=[WandbCallback()])
         model.fit(Sequential_X, Sequential_Y, batch_size=b_size, epochs = 1, verbose=1, shuffle=False)
         model.reset_states()
+    return model
 
 
 # copy weights & compile the model
 def copyWeights(model, newModel):
     old_weights = model.get_weights()
     newModel.set_weights(old_weights)
-    newModel.compile(loss='binary_crossentropy', optimizer='adam')
+    newModel.compile(loss='binary_crossentropy', optimizer='rmsprop')
+
+if __name__ == "__main__":
+    # wandb.init(project="test-project", entity="ic-functionality-duplication")
+
+    dirname = os.path.dirname(__file__)
+    filename_train = os.path.join(dirname, 'datasets/train.txt')
+    batch_size = 128
+    number_of_inputs = 2
+    number_of_oututs = 3
+    time_steps = 40
+    epochs = 10
+    X,Y = readFile(filename_train, number_of_inputs)
+    X_,Y_ = intializeDataSet(X,Y)
+    Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size, time_steps)
+
+    # For debugging
+    print("\ninput_shape ",Sequential_X.shape,"\n")
+    print("output_shape ",Sequential_Y.shape,"\n")
 
 
-# wandb.init(project="test-project", entity="ic-functionality-duplication")
-
-dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, 'datasets/RingCounter_6bit.txt')
-batch_size = 128
-number_of_inputs = 1
-time_steps = 40
-X,Y = readFile(filename, number_of_inputs)
-X_,Y_ = intializeDataSet(X,Y)
-Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size, time_steps)
-
-# For debugging
-print("\ninput_shape ",Sequential_X.shape,"\n")
-print("output_shape ",Sequential_Y.shape,"\n")
+    k_initializer=initializers.RandomUniform(minval=0.40, maxval=0.42, seed=None)
+    model = createModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer)
+    model = trainModel(model, Sequential_X, Sequential_Y, epochs, batch_size)
+    model.save('NN for testing/saved_model/my_model.h5')
+    model.save_weights('NN for testing/saved_model/my_model_weights.h5')
 
 
+    # For debugging
+    print("\ninput_shape ",Sequential_X[0].shape,"\n")
+    print("output_shape ",Sequential_Y[0].shape,"\n")
+    print("inpt_3dArray_shape ",Sequential_X.shape,"\n")
+    print("output_3dArray_shape ",Sequential_Y.shape,"\n")
+    # print("output_shape ",len(X_),"\n")
+    # print("output_shape ",Y_.shape,"\n")Sequential_Y.shape
+    # print("output_shape ",Sequential_X[0],"\n")
 
 
-k_initializer=initializers.RandomUniform(minval=0.410, maxval=0.415, seed=None)
-model = createModel(Sequential_X[0].shape, batch_size, 6, k_initializer)
-trainModel(model, Sequential_X, Sequential_Y, 4000, batch_size)
-# new_model = newModel(i_shape, Outputs, k_initializer)
-# Weights = copyWeights(model,new_model)
-
-
-# For debugging
-print("\ninput_shape ",Sequential_X[0].shape,"\n")
-print("output_shape ",Sequential_Y[0].shape,"\n")
-print("inpt_3dArray_shape ",Sequential_X.shape,"\n")
-print("output_3dArray_shape ",Sequential_Y.shape,"\n")
-# print("output_shape ",len(X_),"\n")
-# print("output_shape ",Y_.shape,"\n")Sequential_Y.shape
-# print("output_shape ",Sequential_X[0],"\n")
-# batch_input_shape=(32,20,7)
 
 
 
