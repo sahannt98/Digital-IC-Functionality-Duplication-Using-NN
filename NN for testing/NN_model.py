@@ -94,38 +94,40 @@ def copyWeights(model, newModel):
     newModel.set_weights(old_weights)
     newModel.compile(loss='binary_crossentropy', optimizer='rmsprop')
 
+if __name__ == "main":
+    # wandb.init(project="test-project", entity="ic-functionality-duplication")
 
-# wandb.init(project="test-project", entity="ic-functionality-duplication")
+    dirname = os.path.dirname(__file__)
+    filename_train = os.path.join(dirname, 'datasets/train.txt')
+    batch_size = 128
+    number_of_inputs = 2
+    number_of_oututs = 3
+    time_steps = 40
+    epochs = 100
+    X,Y = readFile(filename_train, number_of_inputs)
+    X_,Y_ = intializeDataSet(X,Y)
+    Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size, time_steps)
 
-dirname = os.path.dirname(__file__)
-filename_train = os.path.join(dirname, 'datasets/train.txt')
-batch_size = 128
-number_of_inputs = 2
-number_of_oututs = 3
-time_steps = 40
-X,Y = readFile(filename_train, number_of_inputs)
-X_,Y_ = intializeDataSet(X,Y)
-Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size, time_steps)
-
-# For debugging
-print("\ninput_shape ",Sequential_X.shape,"\n")
-print("output_shape ",Sequential_Y.shape,"\n")
-
-
-k_initializer=initializers.RandomUniform(minval=0.40, maxval=0.42, seed=None)
-model = createModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer)
-model = trainModel(model, Sequential_X, Sequential_Y, 5, batch_size)
-model.save('NN for testing/saved_model/my_model.h5')
+    # For debugging
+    print("\ninput_shape ",Sequential_X.shape,"\n")
+    print("output_shape ",Sequential_Y.shape,"\n")
 
 
-# For debugging
-print("\ninput_shape ",Sequential_X[0].shape,"\n")
-print("output_shape ",Sequential_Y[0].shape,"\n")
-print("inpt_3dArray_shape ",Sequential_X.shape,"\n")
-print("output_3dArray_shape ",Sequential_Y.shape,"\n")
-# print("output_shape ",len(X_),"\n")
-# print("output_shape ",Y_.shape,"\n")Sequential_Y.shape
-# print("output_shape ",Sequential_X[0],"\n")
+    k_initializer=initializers.RandomUniform(minval=0.40, maxval=0.42, seed=None)
+    model = createModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer)
+    model = trainModel(model, Sequential_X, Sequential_Y, epochs, batch_size)
+    model.save('NN for testing/saved_model/my_model.h5')
+    model.save_weights('NN for testing/saved_model/my_model_weights.h5')
+
+
+    # For debugging
+    print("\ninput_shape ",Sequential_X[0].shape,"\n")
+    print("output_shape ",Sequential_Y[0].shape,"\n")
+    print("inpt_3dArray_shape ",Sequential_X.shape,"\n")
+    print("output_3dArray_shape ",Sequential_Y.shape,"\n")
+    # print("output_shape ",len(X_),"\n")
+    # print("output_shape ",Y_.shape,"\n")Sequential_Y.shape
+    # print("output_shape ",Sequential_X[0],"\n")
 
 
 

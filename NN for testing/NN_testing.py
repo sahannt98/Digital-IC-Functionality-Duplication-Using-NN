@@ -1,20 +1,35 @@
-# For testing
-batch_size = 1
+import os
+import wandb
+from wandb.keras import WandbCallback
+import numpy as np
+import tensorflow as tf
+from keras.models import Sequential
+from tensorflow.keras.layers import Dense, LSTM
+from tensorflow.keras import layers, initializers
+
+
+from NN_model import readFile
+from NN_model import intializeDataSet
+from NN_model import reArangeDataSet
+from NN_model import newModel
+from NN_model import copyWeights
+from NN_model import trainModel
+
+
+
+dirname = os.path.dirname(__file__)
 filename_test = os.path.join(dirname, 'datasets/test.txt')
+batch_size = 1
+number_of_inputs = 2
+number_of_oututs = 3
+time_steps = 40
 X,Y = readFile(filename_test, number_of_inputs)
 X_,Y_ = intializeDataSet(X,Y)
 Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size, time_steps)
-# new_model = newModel(Sequential_X[0], number_of_oututs, k_initializer)
 
-# For debugging
-print("\ninput_shape ",Sequential_X.shape,"\n")
-print("output_shape ",Sequential_Y.shape,"\n")
+k_initializer=initializers.RandomUniform(minval=0.40, maxval=0.42, seed=None)
+# new_model = tf.keras.models.load_model('NN for testing/saved_model/my_model.h5')
+new_model = newModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer)
+copyWeights(model, new_model)
+model = trainModel(new_model, Sequential_X, Sequential_Y, 5, batch_size)
 
-new_model = Sequential()
-new_model.add(LSTM(64, input_shape=Sequential_X[0],batch_size=1,activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
-new_model.add(Dense(number_of_oututs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
-Weights = copyWeights(model,new_model)
-new_model.compile(loss='binary_crossentropy',optimizer='rmsprop', metrics=['binary_accuracy'])    
-
-
-# Weights = copyWeights(model,new_model)
