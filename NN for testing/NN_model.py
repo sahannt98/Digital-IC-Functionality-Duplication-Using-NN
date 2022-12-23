@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow import keras
 from keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout
-from tensorflow.keras import layers, initializers
+from tensorflow.keras import layers, initializers, optimizers
 
 # Read the dataset file and seperate inputs and outputs
 def readFile(file, number_of_input):
@@ -63,9 +63,9 @@ def createModel(i_shape, b_size, Outputs, k_initializer,l_rate):
     # model.add(LSTM(100))
 
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
-    model.add(Dropout(0.5)) 
+    # model.add(Dropout(0.5)) 
     model.summary()
-    opt = keras.optimizers.Adam(learning_rate=l_rate)
+    opt = optimizers.Adam(learning_rate=l_rate)
     model.compile(loss='binary_crossentropy',optimizer=opt, metrics=['binary_accuracy'])
     return model
 
