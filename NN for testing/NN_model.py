@@ -58,7 +58,7 @@ def reArangeDataSet(X, Y, batch_size, time_steps):
 # creating the NN model for training
 def createModel(i_shape, b_size, Outputs, k_initializer,l_rate):
     model = Sequential()
-    model.add(LSTM(128, input_shape=i_shape,batch_size=b_size,activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros', dropout=0.4))
+    model.add(LSTM(128, input_shape=i_shape,batch_size=b_size,activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
     # model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,return_sequences=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
     # model.add(LSTM(100))
 
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     number_of_oututs = 6
     time_steps = 40
     epochs = 1000
-    learning_rate = 0.01
+    learning_rate = 0.0001
     X,Y = readFile(filename_train, number_of_inputs)
     X_,Y_ = intializeDataSet(X,Y)
     Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size, time_steps)
