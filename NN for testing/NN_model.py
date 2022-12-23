@@ -3,9 +3,10 @@ import wandb
 from wandb.keras import WandbCallback
 import numpy as np
 import tensorflow as tf
+from tensorflow import keras
 from keras.models import Sequential
-from tensorflow.keras.layers import Dense, LSTM
-from tensorflow.keras import layers, initializers
+from tensorflow.keras.layers import Dense, LSTM, Dropout
+from tensorflow.keras import layers, initializers, optimizers
 
 # Read the dataset file and seperate inputs and outputs
 def readFile(file, number_of_input):
@@ -55,19 +56,17 @@ def reArangeDataSet(X, Y, batch_size, time_steps):
 
 
 # creating the NN model for training
-def createModel(i_shape, b_size, Outputs, k_initializer):
+def createModel(i_shape, b_size, Outputs, k_initializer,l_rate):
     model = Sequential()
-    model.add(LSTM(64, input_shape=i_shape,batch_size=b_size,activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
-    # model.add(LSTM(128, input_shape=Sequential_X[0].shape, activation=None,return_sequences=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
-    # model.add(LSTM(32,return_sequences=False))
-
-    # model.add(LSTM(20, activation='tanh',return_sequences=True))
-    # model.add(layers.Flatten())
-    # model.add(Dense(10, activation='tanh'))
+    model.add(LSTM(128, input_shape=i_shape,batch_size=b_size,activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
+    # model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,return_sequences=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
+    # model.add(LSTM(100))
 
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
+    # model.add(Dropout(0.5)) 
     model.summary()
-    model.compile(loss='binary_crossentropy',optimizer='rmsprop', metrics=['binary_accuracy'])
+    opt = optimizers.Adam(learning_rate=l_rate)
+    model.compile(loss='binary_crossentropy',optimizer=opt, metrics=['binary_accuracy'])
     return model
 
 
@@ -99,11 +98,12 @@ if __name__ == "__main__":
 
     dirname = os.path.dirname(__file__)
     filename_train = os.path.join(dirname, 'datasets/train.txt')
-    batch_size = 128
+    batch_size = 32
     number_of_inputs = 2
     number_of_oututs = 3
     time_steps = 40
-    epochs = 10
+    epochs = 1000
+    learning_rate = 0.0001
     X,Y = readFile(filename_train, number_of_inputs)
     X_,Y_ = intializeDataSet(X,Y)
     Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size, time_steps)
@@ -113,8 +113,8 @@ if __name__ == "__main__":
     print("output_shape ",Sequential_Y.shape,"\n")
 
 
-    k_initializer=initializers.RandomUniform(minval=0.40, maxval=0.42, seed=None)
-    model = createModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer)
+    k_initializer=initializers.RandomUniform(minval=0.40, maxval=0.42, seed=None) # weight initialize
+    model = createModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer, learning_rate)
     model = trainModel(model, Sequential_X, Sequential_Y, epochs, batch_size)
     model.save('NN for testing/saved_model/my_model.h5')
     model.save_weights('NN for testing/saved_model/my_model_weights.h5')
