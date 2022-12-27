@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from keras.models import Sequential
-from tensorflow.keras.layers import Dense, LSTM, Dropout
+from tensorflow.keras.layers import InputLayer, Dense, LSTM, Dropout
 from tensorflow.keras import layers, initializers, optimizers
 
 # Read the dataset file and seperate inputs and outputs
@@ -58,7 +58,8 @@ def reArangeDataSet(X, Y, batch_size, time_steps):
 # creating the NN model for training
 def createModel(i_shape, b_size, Outputs, k_initializer,l_rate):
     model = Sequential()
-    model.add(LSTM(128, input_shape=i_shape,batch_size=b_size,activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
+    model.add(InputLayer(input_shape=i_shape,batch_size=b_size))
+    model.add(LSTM(128, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
     # model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,return_sequences=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
     # model.add(LSTM(100))
 
@@ -73,7 +74,8 @@ def createModel(i_shape, b_size, Outputs, k_initializer,l_rate):
 # creating the NN model for testing (with batch size = 1)
 def newModel(i_shape, Outputs, k_initializer,b_size=1):
     model = Sequential()
-    model.add(LSTM(64, input_shape=i_shape, batch_size=b_size, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
+    model.add(InputLayer(input_shape=i_shape))
+    model.add(LSTM(64, batch_size=b_size, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
     return model
 
@@ -102,7 +104,7 @@ if __name__ == "__main__":
     number_of_inputs = 2
     number_of_oututs = 3
     time_steps = 40
-    epochs = 1000
+    epochs = 5
     learning_rate = 0.0001
     X,Y = readFile(filename_train, number_of_inputs)
     X_,Y_ = intializeDataSet(X,Y)
