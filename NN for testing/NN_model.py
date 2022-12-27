@@ -99,11 +99,11 @@ if __name__ == "__main__":
 
     dirname = os.path.dirname(__file__)
     filename_train = os.path.join(dirname, 'datasets/7BitCounter.txt')
-    batch_size = 32
-    number_of_inputs = 2
-    number_of_oututs = 3
+    batch_size = 50
+    number_of_inputs = 1
+    number_of_oututs = 7
     time_steps = 40
-    epochs = 5
+    epochs = 4000
     lr = 0.0001
     opt = optimizers.Adam(learning_rate=lr)
     X,Y = readFile(filename_train, number_of_inputs)
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     print("output_shape ",Sequential_Y.shape,"\n")
 
 
-    k_initializer=initializers.RandomUniform(minval=0.40, maxval=0.42, seed=None) # weight initialize
+    k_initializer=initializers.RandomUniform(minval=0.4, maxval=0.42, seed=None) # weight initialize
     model = createModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer, opt)
     model = trainModel(model, Sequential_X, Sequential_Y, epochs, batch_size)
     model.save('NN for testing/saved_model/my_model.h5')
