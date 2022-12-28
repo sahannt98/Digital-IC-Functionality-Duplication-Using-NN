@@ -59,12 +59,11 @@ def reArangeDataSet(X, Y, batch_size, time_steps):
 def createModel(i_shape, b_size, Outputs, k_initializer, opt):
     model = Sequential()
     model.add(InputLayer(input_shape=i_shape,batch_size=b_size))
-    model.add(LSTM(128, activation=None,recurrent_activation='sigmoid',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
-    # model.add(LSTM(64, input_shape=Sequential_X[0].shape, activation=None,return_sequences=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros'))
-    # model.add(LSTM(100))
+    model.add(LSTM(40, activation=None,recurrent_activation='sigmoid',return_sequences=True,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
+    # model.add(LSTM(40,return_sequences=True)
+    model.add(LSTM(40),dropout=0.0,recurrent_dropout=0.1)
 
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
-    # model.add(Dropout(0.5)) 
     model.summary()
     model.compile(loss='binary_crossentropy',optimizer=opt, metrics=['binary_accuracy'])
     return model
@@ -105,7 +104,12 @@ if __name__ == "__main__":
     time_steps = 40
     epochs = 4000
     lr = 0.0001
-    opt = optimizers.Adam(learning_rate=lr)
+
+    opt = optimizers.Adam(learning_rate=lr) # optimizer
+    opt1 = optimizers.experimental.AdamW(learning_rate=lr,weight_decay=0.004)
+    opt2 = optimizers.SGD(learning_rate=lr,weight_decay=0.004,momentum=0.0)
+    opt3 = optimizers.RMSprop(learning_rate=lr,weight_decay=0.004,momentum=0.0)
+
     X,Y = readFile(filename_train, number_of_inputs)
     X_,Y_ = intializeDataSet(X,Y)
     Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size, time_steps)
