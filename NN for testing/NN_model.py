@@ -61,8 +61,7 @@ def createModel(i_shape, b_size, Outputs, k_initializer, opt):
     model.add(InputLayer(input_shape=i_shape,batch_size=b_size))
     model.add(LSTM(40, activation=None,recurrent_activation='sigmoid',return_sequences=True,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
     # model.add(LSTM(40,return_sequences=True)
-    model.add(LSTM(40),dropout=0.0,recurrent_dropout=0.1)
-
+    model.add(LSTM(40,dropout=0.0,recurrent_dropout=0.0))
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
     model.summary()
     model.compile(loss='binary_crossentropy',optimizer=opt, metrics=['binary_accuracy'])
@@ -106,11 +105,12 @@ if __name__ == "__main__":
     lr = 0.0001
 
     # optimizers
-    opt = optimizers.Adam(learning_rate=lr,weight_decay=0.004) 
-    opt1 = optimizers.experimental.AdamW(learning_rate=lr,weight_decay=0.004)
-    opt2 = optimizers.SGD(learning_rate=lr,weight_decay=0.004,momentum=0.0)
-    opt3 = optimizers.RMSprop(learning_rate=lr,weight_decay=0.004,momentum=0.0)
-    opt4 = optimizers.Nadam(learning_rate=lr,weight_decay=0.004)
+    opt = optimizers.Adam(learning_rate=lr)
+    # opt = optimizers.Adam(learning_rate=lr,weight_decay=0.004) 
+    # opt1 = optimizers.experimental.AdamW(learning_rate=lr,weight_decay=0.004)
+    # opt2 = optimizers.SGD(learning_rate=lr,weight_decay=0.004,momentum=0.0)
+    # opt3 = optimizers.RMSprop(learning_rate=lr,weight_decay=0.004,momentum=0.0)
+    # opt4 = optimizers.Nadam(learning_rate=lr,weight_decay=0.004)
 
     X,Y = readFile(filename_train, number_of_inputs)
     X_,Y_ = intializeDataSet(X,Y)
