@@ -105,10 +105,12 @@ if __name__ == "__main__":
     epochs = 4000
     lr = 0.0001
 
-    opt = optimizers.Adam(learning_rate=lr) # optimizer
+    # optimizers
+    opt = optimizers.Adam(learning_rate=lr,weight_decay=0.004) 
     opt1 = optimizers.experimental.AdamW(learning_rate=lr,weight_decay=0.004)
     opt2 = optimizers.SGD(learning_rate=lr,weight_decay=0.004,momentum=0.0)
     opt3 = optimizers.RMSprop(learning_rate=lr,weight_decay=0.004,momentum=0.0)
+    opt4 = optimizers.Nadam(learning_rate=lr,weight_decay=0.004)
 
     X,Y = readFile(filename_train, number_of_inputs)
     X_,Y_ = intializeDataSet(X,Y)
