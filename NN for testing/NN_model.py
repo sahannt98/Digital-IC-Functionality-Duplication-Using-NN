@@ -105,7 +105,7 @@ if __name__ == "__main__":
     lr = 0.0001
 
     # optimizers
-    opt = optimizers.Adam(learning_rate=lr)
+    opt = optimizers.Adam(learning_rate=lr,weight_decay=0.004)
     # opt = optimizers.Adam(learning_rate=lr,weight_decay=0.004) 
     # opt1 = optimizers.experimental.AdamW(learning_rate=lr,weight_decay=0.004)
     # opt2 = optimizers.SGD(learning_rate=lr,weight_decay=0.004,momentum=0.0)
