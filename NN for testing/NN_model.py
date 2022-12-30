@@ -59,9 +59,9 @@ def reArangeDataSet(X, Y, batch_size, time_steps):
 def createModel(i_shape, b_size, Outputs, k_initializer, opt):
     model = Sequential()
     model.add(InputLayer(input_shape=i_shape,batch_size=b_size))
-    model.add(LSTM(40, activation=None,recurrent_activation='sigmoid',return_sequences=True,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
-    # model.add(LSTM(40,return_sequences=True)
-    model.add(LSTM(40,dropout=0.0,recurrent_dropout=0.0))
+    model.add(LSTM(12,activation=None,recurrent_activation='sigmoid',return_sequences=True,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
+    model.add(LSTM(20,stateful=True,return_sequences=True,dropout=0.0,recurrent_dropout=0.0))
+    model.add(LSTM(16,stateful=True,dropout=0.0,recurrent_dropout=0.0))
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
     model.summary()
     model.compile(loss='binary_crossentropy',optimizer=opt, metrics=['binary_accuracy'])
@@ -80,7 +80,7 @@ def newModel(i_shape, Outputs, k_initializer,b_size=1):
 # fit network / training
 def trainModel(model, Sequential_X, Sequential_Y, Epochs, b_size):
     for i in range(Epochs):
-        # model.fit(Sequential_X, Sequential_Y, epochs=1, verbose=2, shuffle=False, callbacks=[WandbCallback()])
+        # model.fit(Sequential_X, Sequential_Y, batch_size=b_size, epochs = 1, verbose=1, shuffle=False, callbacks=[WandbCallback()])
         model.fit(Sequential_X, Sequential_Y, batch_size=b_size, epochs = 1, verbose=1, shuffle=False)
         model.reset_states()
     return model
@@ -96,21 +96,20 @@ if __name__ == "__main__":
     # wandb.init(project="test-project", entity="ic-functionality-duplication")
 
     dirname = os.path.dirname(__file__)
-    filename_train = os.path.join(dirname, 'datasets/7BitCounter.txt')
-    batch_size = 50
+    filename_train = os.path.join(dirname, 'datasets/10BitCounter.txt')
+    batch_size = 60
     number_of_inputs = 1
-    number_of_oututs = 7
-    time_steps = 40
+    number_of_oututs = 10
+    time_steps = 60
     epochs = 4000
     lr = 0.0001
 
     # optimizers
-    opt = optimizers.Adam(learning_rate=lr,weight_decay=0.004)
-    # opt = optimizers.Adam(learning_rate=lr,weight_decay=0.004) 
-    # opt1 = optimizers.experimental.AdamW(learning_rate=lr,weight_decay=0.004)
-    # opt2 = optimizers.SGD(learning_rate=lr,weight_decay=0.004,momentum=0.0)
-    # opt3 = optimizers.RMSprop(learning_rate=lr,weight_decay=0.004,momentum=0.0)
-    # opt4 = optimizers.Nadam(learning_rate=lr,weight_decay=0.004)
+    opt = optimizers.Adam(learning_rate=lr,weight_decay=0.0004)
+    opt1 = optimizers.experimental.AdamW(learning_rate=lr,weight_decay=0.004)
+    opt2 = optimizers.SGD(learning_rate=lr,weight_decay=0.004,momentum=0.0)
+    opt3 = optimizers.RMSprop(learning_rate=lr,weight_decay=0.004,momentum=0.0)
+    opt4 = optimizers.Nadam(learning_rate=lr,weight_decay=0.004)
 
     X,Y = readFile(filename_train, number_of_inputs)
     X_,Y_ = intializeDataSet(X,Y)
