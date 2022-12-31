@@ -8,6 +8,7 @@ from keras.models import Sequential
 from tensorflow.keras.layers import InputLayer, Dense, LSTM, Dropout
 from tensorflow.keras import layers, initializers, optimizers
 
+
 # Read the dataset file and seperate inputs and outputs
 def readFile(file, number_of_input):
     f1 = open(file, "r")
@@ -96,10 +97,10 @@ if __name__ == "__main__":
     # wandb.init(project="test-project", entity="ic-functionality-duplication")
 
     dirname = os.path.dirname(__file__)
-    filename_train = os.path.join(dirname, 'datasets/10BitCounter.txt')
+    filename_train = os.path.join(dirname, 'datasets/9BitCounter.txt')
     batch_size = 60
     number_of_inputs = 1
-    number_of_oututs = 10
+    number_of_oututs = 9
     time_steps = 60
     epochs = 4000
     lr = 0.0001
