@@ -48,10 +48,10 @@ tuner = RandomSearch(
     objective='binary_accuracy',
     max_trials=4,
     executions_per_trial=1,
-    directory='/NN for testing/HP',
+    directory='HP',
     project_name='HyperParameterTunning'
 )
 
 tuner.search_space_summary()
-tuner.search(Sequential_X,Sequential_Y,batch_size=b_size,epochs=5,shuffle=False) # Fit
+tuner.search(Sequential_X,Sequential_Y,batch_size=b_size,epochs=1000,shuffle=False) # Fit
 tuner.results_summary()
