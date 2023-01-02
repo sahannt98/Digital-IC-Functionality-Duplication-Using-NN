@@ -60,9 +60,9 @@ def reArangeDataSet(X, Y, batch_size, time_steps):
 def createModel(i_shape, b_size, Outputs, k_initializer, opt):
     model = Sequential()
     model.add(InputLayer(input_shape=i_shape,batch_size=b_size))
-    model.add(LSTM(12,activation=None,recurrent_activation='sigmoid',return_sequences=True,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
-    model.add(LSTM(20,stateful=True,return_sequences=True,dropout=0.0,recurrent_dropout=0.0))
-    model.add(LSTM(16,stateful=True,dropout=0.0,recurrent_dropout=0.0))
+    model.add(LSTM(32,activation='sigmoid',recurrent_activation='sigmoid',return_sequences=True,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
+    model.add(LSTM(40,stateful=True,return_sequences=True,dropout=0.0,recurrent_dropout=0.0))
+    model.add(LSTM(20,stateful=True,dropout=0.0,recurrent_dropout=0.0))
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
     model.summary()
     model.compile(loss='binary_crossentropy',optimizer=opt, metrics=['binary_accuracy'])
@@ -98,15 +98,15 @@ if __name__ == "__main__":
 
     dirname = os.path.dirname(__file__)
     filename_train = os.path.join(dirname, 'datasets/9BitCounter.txt')
-    batch_size = 60
+    batch_size = 10
     number_of_inputs = 1
     number_of_oututs = 9
     time_steps = 60
-    epochs = 4000
+    epochs = 1000
     lr = 0.0001
 
     # optimizers
-    opt = optimizers.Adam(learning_rate=lr,weight_decay=0.0004)
+    opt = optimizers.Adam(learning_rate=lr,weight_decay=0.004)
     opt1 = optimizers.experimental.AdamW(learning_rate=lr,weight_decay=0.004)
     opt2 = optimizers.SGD(learning_rate=lr,weight_decay=0.004,momentum=0.0)
     opt3 = optimizers.RMSprop(learning_rate=lr,weight_decay=0.004,momentum=0.0)
@@ -120,8 +120,10 @@ if __name__ == "__main__":
     print("\ninput_shape ",Sequential_X.shape,"\n")
     print("output_shape ",Sequential_Y.shape,"\n")
 
+    # weight initialize
+    k_initializer= initializers.GlorotNormal()
+    k_initializer1=initializers.RandomUniform(minval=0.4, maxval=0.42, seed=2) 
 
-    k_initializer=initializers.RandomUniform(minval=0.4, maxval=0.42, seed=None) # weight initialize
     model = createModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer, opt)
     model = trainModel(model, Sequential_X, Sequential_Y, epochs, batch_size)
     model.save('NN for testing/saved_model/my_model.h5')
