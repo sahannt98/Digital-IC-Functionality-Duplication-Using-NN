@@ -97,12 +97,12 @@ if __name__ == "__main__":
     # wandb.init(project="test-project", entity="ic-functionality-duplication")
 
     dirname = os.path.dirname(__file__)
-    filename_train = os.path.join(dirname, 'datasets/9BitCounter.txt')
-    batch_size = 10
+    filename_train = os.path.join(dirname, 'datasets/16BitCounter.txt')
+    batch_size = 100
     number_of_inputs = 1
-    number_of_oututs = 9
+    number_of_oututs = 16
     time_steps = 60
-    epochs = 1000
+    epochs = 500
     lr = 0.0001
 
     # optimizers

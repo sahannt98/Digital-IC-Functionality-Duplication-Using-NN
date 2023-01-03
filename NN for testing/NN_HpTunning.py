@@ -24,16 +24,16 @@ def build_model(hp):
    
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
 
-    model.compile(optimizer=optimizers.Adam(hp.Choice('learning_rate',values=[1e-2,1e-4]),weight_decay=0.004),loss='binary_crossentropy',metrics=['binary_accuracy'])
+    model.compile(optimizer=optimizers.Adam(hp.Choice('learning_rate',values=[1e-2,1e-5]),weight_decay=0.004),loss='binary_crossentropy',metrics=['binary_accuracy'])
     return model
 
 
 
 dirname = os.path.dirname(__file__)
-filename_train = os.path.join(dirname, 'datasets/9BitCounter.txt')
-b_size = 10
+filename_train = os.path.join(dirname, 'datasets/16BitCounter.txt')
+b_size = 100
 number_of_inputs = 1
-number_of_oututs = 9
+number_of_oututs = 16
 time_steps = 60
 
 X,Y = readFile(filename_train, number_of_inputs)
@@ -53,5 +53,5 @@ tuner = RandomSearch(
 )
 
 tuner.search_space_summary()
-tuner.search(Sequential_X,Sequential_Y,batch_size=b_size,epochs=50,shuffle=False,verbose=1) # Fit
+tuner.search(Sequential_X,Sequential_Y,batch_size=b_size,epochs=10,shuffle=False,verbose=1) # Fit
 tuner.results_summary()
