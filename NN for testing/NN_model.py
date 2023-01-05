@@ -3,6 +3,7 @@ import wandb
 from wandb.keras import WandbCallback
 import numpy as np
 import tensorflow as tf
+from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from keras.models import Sequential
 from tensorflow.keras.layers import InputLayer, Dense, LSTM, Dropout
@@ -20,7 +21,6 @@ def readFile(file, number_of_input):
             pass
         else:
             items = np.array([int(i) for i in line.strip().split()])
-            # items[np.isclose(items, 0)] = -1
             X.append(items[:number_of_input])
             Y.append(items[number_of_input:])
         count += 1
@@ -43,14 +43,11 @@ def intializeDataSet(X,Y):
 
 # Dataset reshaping/ converting 2D input array to 3D array
 # 3D array ------> [Samples, Time steps, Features]
-def reArangeDataSet(X, Y, batch_size, time_steps):
+def reArangeDataSet(X, Y, time_steps):
     Sequential_X = []
     Sequential_Y = Y[time_steps:]
     for i in range(len(X) - time_steps):
         Sequential_X.append(X[i:i + time_steps])
-    Start_pt = len(Sequential_X)%batch_size
-    Sequential_X = Sequential_X[Start_pt:]
-    Sequential_Y = Sequential_Y[Start_pt:]
     Sequential_X = np.array(Sequential_X)
     Sequential_Y = np.array(Sequential_Y)
     return Sequential_X, Sequential_Y
@@ -79,11 +76,11 @@ def newModel(i_shape, Outputs, k_initializer,b_size=1):
 
 
 # fit network / training
-def trainModel(model, Sequential_X, Sequential_Y, Epochs, b_size):
+def trainModel(model, X_train, y_train, X_val, y_val, Epochs, b_size):
     for i in range(Epochs):
-        # model.fit(Sequential_X, Sequential_Y, batch_size=b_size, epochs = 1, verbose=1, shuffle=False, callbacks=[WandbCallback()])
-        model.fit(Sequential_X, Sequential_Y, batch_size=b_size, epochs = 1, verbose=1, shuffle=False)
-        model.reset_states()
+        # model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = 1, verbose=1, shuffle=True, callbacks=[WandbCallback()])
+        model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = 1, verbose=1, shuffle=True)
+        # model.reset_states()
     return model
 
 
@@ -97,10 +94,10 @@ if __name__ == "__main__":
     # wandb.init(project="test-project", entity="ic-functionality-duplication")
 
     dirname = os.path.dirname(__file__)
-    filename_train = os.path.join(dirname, 'datasets/16BitCounter.txt')
-    batch_size = 100
+    filename_train = os.path.join(dirname, 'datasets/10BitCounter.txt')
+    batch_size = 10
     number_of_inputs = 1
-    number_of_oututs = 16
+    number_of_oututs = 10
     time_steps = 60
     epochs = 500
     lr = 0.0001
@@ -112,9 +109,12 @@ if __name__ == "__main__":
     opt3 = optimizers.RMSprop(learning_rate=lr,weight_decay=0.004,momentum=0.0)
     opt4 = optimizers.Nadam(learning_rate=lr,weight_decay=0.004)
 
+    # dataset preparation and then seperation for training & validation data
     X,Y = readFile(filename_train, number_of_inputs)
     X_,Y_ = intializeDataSet(X,Y)
-    Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, batch_size, time_steps)
+    Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, time_steps)
+    X_train, X_val, y_train, y_val = train_test_split(Sequential_X, Sequential_Y, test_size=0.2, random_state=42)
+    X_train, X_val, y_train, y_val = X_train[len(X_train)%batch_size:], X_val[len(X_val)%batch_size:], y_train[len(y_train)%batch_size:], y_val[len(y_val)%batch_size:]
 
     # For debugging
     print("\ninput_shape ",Sequential_X.shape,"\n")
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     k_initializer1=initializers.RandomUniform(minval=0.4, maxval=0.42, seed=2) 
 
     model = createModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer, opt)
-    model = trainModel(model, Sequential_X, Sequential_Y, epochs, batch_size)
+    model = trainModel(model, X_train, y_train, X_val, y_val, epochs, batch_size)
     model.save('NN for testing/saved_model/my_model.h5')
     model.save_weights('NN for testing/saved_model/my_model_weights.h5')
 

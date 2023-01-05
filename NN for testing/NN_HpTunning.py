@@ -5,6 +5,7 @@ from keras.models import Sequential
 from tensorflow.keras.layers import InputLayer, Dense, LSTM, Dropout
 from tensorflow.keras import layers, initializers, optimizers
 from keras_tuner.tuners import RandomSearch
+from sklearn.model_selection import train_test_split
 
 from NN_model import readFile
 from NN_model import intializeDataSet
@@ -12,9 +13,7 @@ from NN_model import reArangeDataSet
 
 
 # Keras tuner
-def build_model(hp):
-    k_initializer= initializers.GlorotNormal() # weight initialize
-    
+def build_model(hp):    
     model = Sequential()
     model.add(InputLayer(input_shape=i_shape,batch_size=b_size))
 
@@ -30,22 +29,28 @@ def build_model(hp):
 
 
 dirname = os.path.dirname(__file__)
-filename_train = os.path.join(dirname, 'datasets/16BitCounter.txt')
-b_size = 100
+filename_train = os.path.join(dirname, 'datasets/10BitCounter.txt')
+b_size = 10
 number_of_inputs = 1
-number_of_oututs = 16
+number_of_oututs = 10
 time_steps = 60
 
 X,Y = readFile(filename_train, number_of_inputs)
 X_,Y_ = intializeDataSet(X,Y)
-Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, b_size, time_steps)
+Sequential_X, Sequential_Y = reArangeDataSet(X_, Y_, time_steps)
+X_train, X_val, y_train, y_val = train_test_split(Sequential_X, Sequential_Y, test_size=0.2, random_state=42)
+X_train, X_val, y_train, y_val = X_train[len(X_train)%b_size:], X_val[len(X_val)%b_size:], y_train[len(y_train)%b_size:], y_val[len(y_val)%b_size:]
 
-i_shape=Sequential_X[0].shape
-Outputs=number_of_oututs
+i_shape = Sequential_X[0].shape
+Outputs = number_of_oututs
+
+# weight initialize
+k_initializer = initializers.GlorotNormal()
+k_initializer1 = initializers.GlorotUniform()
 
 tuner = RandomSearch(
     build_model,
-    objective='binary_accuracy',
+    objective='val_binary_accuracy',
     max_trials=500,
     executions_per_trial=1,
     directory='HP',
@@ -53,5 +58,5 @@ tuner = RandomSearch(
 )
 
 tuner.search_space_summary()
-tuner.search(Sequential_X,Sequential_Y,batch_size=b_size,epochs=10,shuffle=False,verbose=1) # Fit
+tuner.search(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = 10, verbose=1,shuffle=True) # Fit
 tuner.results_summary()
