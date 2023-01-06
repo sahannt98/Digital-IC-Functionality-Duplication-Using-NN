@@ -58,8 +58,8 @@ def createModel(i_shape, b_size, Outputs, k_initializer, opt):
     model = Sequential()
     model.add(InputLayer(input_shape=i_shape,batch_size=b_size))
     model.add(LSTM(32,activation='sigmoid',recurrent_activation='sigmoid',return_sequences=True,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
-    model.add(LSTM(40,stateful=True,return_sequences=True,dropout=0.0,recurrent_dropout=0.0))
-    model.add(LSTM(20,stateful=True,dropout=0.0,recurrent_dropout=0.0))
+    model.add(LSTM(12,stateful=True,return_sequences=True,dropout=0.0,recurrent_dropout=0.0))
+    model.add(LSTM(32,stateful=True,dropout=0.0,recurrent_dropout=0.0))
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
     model.summary()
     model.compile(loss='binary_crossentropy',optimizer=opt, metrics=['binary_accuracy'])
@@ -94,13 +94,13 @@ if __name__ == "__main__":
     # wandb.init(project="test-project", entity="ic-functionality-duplication")
 
     dirname = os.path.dirname(__file__)
-    filename_train = os.path.join(dirname, 'datasets/10BitCounter.txt')
+    filename_train = os.path.join(dirname, 'datasets/7BitShiftRegisterSIPO_random.txt')
     batch_size = 10
-    number_of_inputs = 1
-    number_of_oututs = 10
+    number_of_inputs = 2
+    number_of_oututs = 7
     time_steps = 60
-    epochs = 500
-    lr = 0.0001
+    epochs = 100
+    lr = 0.01
 
     # optimizers
     opt = optimizers.Adam(learning_rate=lr,weight_decay=0.004)

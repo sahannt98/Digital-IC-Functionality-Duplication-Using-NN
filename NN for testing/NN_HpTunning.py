@@ -29,10 +29,10 @@ def build_model(hp):
 
 
 dirname = os.path.dirname(__file__)
-filename_train = os.path.join(dirname, 'datasets/10BitCounter.txt')
+filename_train = os.path.join(dirname, 'datasets/7BitShiftRegisterSIPO_random.txt')
 b_size = 10
-number_of_inputs = 1
-number_of_oututs = 10
+number_of_inputs = 2
+number_of_oututs = 7
 time_steps = 60
 
 X,Y = readFile(filename_train, number_of_inputs)
