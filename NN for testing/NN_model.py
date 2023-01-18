@@ -105,7 +105,7 @@ if __name__ == "__main__":
     wandb.init(project="test-project", entity="ic-functionality-duplication",
     config={
     "learning_rate": 0.001,
-    "architecture": "LSTM 3 layers",
+    "architecture": "LSTM",
     "dataset": "4BitShiftRegisterSIPO",
     "epochs": 10,
     })
