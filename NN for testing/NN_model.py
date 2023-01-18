@@ -3,6 +3,7 @@ import wandb
 from wandb.keras import WandbCallback
 import numpy as np
 import tensorflow as tf
+import datetime
 from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from keras.models import Sequential
@@ -57,9 +58,9 @@ def reArangeDataSet(X, Y, time_steps):
 def createModel(i_shape, b_size, Outputs, k_initializer, opt):
     model = Sequential()
     model.add(InputLayer(input_shape=i_shape,batch_size=b_size))
-    model.add(LSTM(32,activation='sigmoid',recurrent_activation='sigmoid',return_sequences=True,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
-    model.add(LSTM(12,stateful=True,return_sequences=True,dropout=0.0,recurrent_dropout=0.0))
-    model.add(LSTM(32,stateful=True,dropout=0.0,recurrent_dropout=0.0))
+    model.add(LSTM(30,activation='sigmoid',recurrent_activation='sigmoid',return_sequences=True,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.4,recurrent_dropout=0.1))
+    model.add(LSTM(36,stateful=True,return_sequences=True,dropout=0.0,recurrent_dropout=0.0))
+    model.add(LSTM(20,stateful=True,dropout=0.0,recurrent_dropout=0.0))
     model.add(Dense(Outputs,kernel_initializer=k_initializer,bias_initializer ='uniform',activation='sigmoid'))
     model.summary()
     model.compile(loss='binary_crossentropy',optimizer=opt, metrics=['binary_accuracy'])
@@ -77,10 +78,11 @@ def newModel(i_shape, Outputs, k_initializer,b_size=1):
 
 # fit network / training
 def trainModel(model, X_train, y_train, X_val, y_val, Epochs, b_size):
-    for i in range(Epochs):
-        # model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = 1, verbose=1, shuffle=True, callbacks=[WandbCallback()])
-        model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = 1, verbose=1, shuffle=True)
-        # model.reset_states()
+    model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = Epochs, verbose=1, shuffle=False,  callbacks=[tensorboard_callback])
+    # for i in range(Epochs):
+    #     model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = 1, verbose=1, shuffle=True, callbacks=[WandbCallback()])
+    #     # model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = 1, verbose=1, shuffle=False, callbacks=[tensorboard_callback])
+    #     model.reset_states()
     return model
 
 
@@ -90,21 +92,29 @@ def copyWeights(model, newModel):
     newModel.set_weights(old_weights)
     newModel.compile(loss='binary_crossentropy', optimizer='rmsprop')
 
+
+
 if __name__ == "__main__":
+    # Wandb
     # wandb.init(project="test-project", entity="ic-functionality-duplication")
+    
+    # Tensorboard
+    log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
     dirname = os.path.dirname(__file__)
-    filename_train = os.path.join(dirname, 'datasets/7BitShiftRegisterSIPO_random.txt')
-    batch_size = 10
+    filename_train = os.path.join(dirname, 'datasets/4BitShiftRegisterSIPO_random_3.txt')
+    batch_size = 1
     number_of_inputs = 2
-    number_of_oututs = 7
-    time_steps = 60
-    epochs = 100
-    lr = 0.01
+    number_of_oututs = 4
+    time_steps = 4
+    epochs = 10
+    lr = 0.001
 
     # optimizers
+    # opt = optimizers.Adam(learning_rate=lr,weight_decay=0.0005,amsgrad=F,use_ema=True,ema_momentum=0.99)
     opt = optimizers.Adam(learning_rate=lr,weight_decay=0.004)
-    opt1 = optimizers.experimental.AdamW(learning_rate=lr,weight_decay=0.004)
+    opt1 = optimizers.experimental.AdamW(learning_rate=lr,weight_decay=0.0009,amsgrad=True,use_ema=True,ema_momentum=0.99)
     opt2 = optimizers.SGD(learning_rate=lr,weight_decay=0.004,momentum=0.0)
     opt3 = optimizers.RMSprop(learning_rate=lr,weight_decay=0.004,momentum=0.0)
     opt4 = optimizers.Nadam(learning_rate=lr,weight_decay=0.004)
@@ -124,7 +134,10 @@ if __name__ == "__main__":
     k_initializer= initializers.GlorotNormal()
     k_initializer1=initializers.RandomUniform(minval=0.4, maxval=0.42, seed=2) 
 
-    model = createModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer, opt)
+    model = createModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer, opt1)
+
+    lstm_layer = model.layers[1]
+
     model = trainModel(model, X_train, y_train, X_val, y_val, epochs, batch_size)
     model.save('NN for testing/saved_model/my_model.h5')
     model.save_weights('NN for testing/saved_model/my_model_weights.h5')
