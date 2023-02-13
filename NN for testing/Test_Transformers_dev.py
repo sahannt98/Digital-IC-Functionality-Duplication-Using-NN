@@ -60,26 +60,27 @@ class attention(Layer):
         return context
 
 
-def create_RNN_with_attention(hidden_units, dense_units, vocabulary_size, max_length):
+def create_NN_with_attention(hidden_units, dense_units, vocabulary_size, max_length):
     inputs = Input(shape=(max_length,))
     embedding_layer = Embedding(input_dim=vocabulary_size, output_dim=hidden_units, input_length=max_length)(inputs)
     attention_layer = attention()(embedding_layer)
-    Normalization_layer = LayerNormalization()(attention_layer)
-    dense_layer = Dense(256, activation='relu')(Normalization_layer)
-    outputs = Dense(dense_units, activation='sigmoid')(dense_layer)
+    Normalization_layer1 = LayerNormalization()(attention_layer)
+    dense_layer = Dense(256, activation='relu')(Normalization_layer1)
+    Normalization_layer2 = LayerNormalization()(dense_layer)
+    outputs = Dense(dense_units, activation='sigmoid')(Normalization_layer2)
     model = Model(inputs, outputs)
     model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.001), metrics=['binary_accuracy'])    
     return model       
  
 # Set up parameters
-hidden_units = 128
+hidden_units = 256
 epochs = 50
 batch_size = 100
 dense_units = 4
 vocabulary_size = 2 # since the inputs only contain 0 and 1
 max_length = 5 # the number of inputs to the circuit
 
-model_attention_embedding = create_RNN_with_attention(hidden_units=hidden_units, dense_units=dense_units, vocabulary_size=vocabulary_size, max_length=max_length)
+model_attention_embedding = create_NN_with_attention(hidden_units=hidden_units, dense_units=dense_units, vocabulary_size=vocabulary_size, max_length=max_length)
 
 model_attention_embedding.summary() 
 
