@@ -73,9 +73,9 @@ def create_RNN_with_attention(hidden_units, dense_units, input_shape):
 hidden_units = 128
 epochs = 10
 batch_size = 100
+dense_units = 4
 
-model_attention = create_RNN_with_attention(hidden_units=hidden_units, dense_units=4, 
-                                  input_shape=(5,1))
+model_attention = create_RNN_with_attention(hidden_units=hidden_units, dense_units=dense_units, input_shape=(input_train.shape[1], 1))
 
 model_attention.summary() 
 
