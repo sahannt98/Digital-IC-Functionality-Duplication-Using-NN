@@ -1,6 +1,6 @@
 import numpy as np
 from tensorflow import keras
-from keras.layers import Input, Dense, Layer, SimpleRNN, LSTM
+from keras.layers import Input, Dense, Layer, Embedding, LayerNormalization, BatchNormalization
 from keras import Model
 from keras.optimizers import Adam
 import keras.backend as K
@@ -60,24 +60,29 @@ class attention(Layer):
         return context
 
 
-def create_RNN_with_attention(hidden_units, dense_units, input_shape):
-    x=Input(shape=input_shape)
-    RNN_layer = LSTM(hidden_units, return_sequences=True, activation='tanh')(x)
-    attention_layer = attention()(RNN_layer)
-    outputs=Dense(dense_units, trainable=True, activation='sigmoid')(attention_layer)
-    model=Model(x,outputs)
+def create_NN_with_attention(hidden_units, dense_units, vocabulary_size, max_length):
+    inputs = Input(shape=(max_length,))
+    embedding_layer = Embedding(input_dim=vocabulary_size, output_dim=hidden_units, input_length=max_length)(inputs)
+    attention_layer = attention()(embedding_layer)
+    Normalization_layer1 = LayerNormalization()(attention_layer)
+    dense_layer = Dense(256, activation='relu')(Normalization_layer1)
+    Normalization_layer2 = LayerNormalization()(dense_layer)
+    outputs = Dense(dense_units, activation='sigmoid')(Normalization_layer2)
+    model = Model(inputs, outputs)
     model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.001), metrics=['binary_accuracy'])    
-    return model    
+    return model       
  
 # Set up parameters
-hidden_units = 128
-epochs = 10
+hidden_units = 256
+epochs = 50
 batch_size = 100
 dense_units = 4
+vocabulary_size = 2 # since the inputs only contain 0 and 1
+max_length = 5 # the number of inputs to the circuit
 
-model_attention = create_RNN_with_attention(hidden_units=hidden_units, dense_units=dense_units, input_shape=(input_train.shape[1], 1))
+model_attention_embedding = create_NN_with_attention(hidden_units=hidden_units, dense_units=dense_units, vocabulary_size=vocabulary_size, max_length=max_length)
 
-model_attention.summary() 
+model_attention_embedding.summary() 
 
 # Fit the model to the training data
-history = model_attention.fit(input_train, output_train, epochs=epochs, batch_size=batch_size, validation_data=(input_test, output_test))
+history = model_attention_embedding.fit(input_train, output_train, epochs=epochs, batch_size=batch_size, validation_data=(input_test, output_test))
