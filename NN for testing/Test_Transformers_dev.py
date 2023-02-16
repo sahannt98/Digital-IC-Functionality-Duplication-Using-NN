@@ -8,7 +8,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import os
 dirname = os.path.dirname(__file__)
-filename_train = os.path.join(dirname, 'datasets/4BitShiftRegisterSIPO_random.txt')
+filename_train = os.path.join(dirname, 'datasets/4BitShiftRegisterSIPO_random2.txt')
 
 # Prepare the input and output data for the new circuit
 inputs = []
@@ -19,7 +19,7 @@ with open(filename_train, "r") as file:
     # Read the file line by line
     for line in file:
         # Split the line into input and output
-        items = np.array([int(i) for i in line.strip().split()])
+        items = np.array([int(x.strip().replace("'", "")) for x in line.strip().split()])
         inp, out1, out2, out3, out4 = items[0], items[1], items[2], items[3], items[4]
         inputs.append([inp] + prev_outputs)
         outputs.append([out1, out2, out3, out4])
@@ -64,10 +64,9 @@ def create_NN_with_attention(hidden_units, dense_units, vocabulary_size, max_len
     inputs = Input(shape=(max_length,))
     embedding_layer = Embedding(input_dim=vocabulary_size, output_dim=hidden_units, input_length=max_length)(inputs)
     attention_layer = attention()(embedding_layer)
-    Normalization_layer1 = LayerNormalization()(attention_layer)
-    dense_layer = Dense(256, activation='relu')(Normalization_layer1)
-    Normalization_layer2 = LayerNormalization()(dense_layer)
-    outputs = Dense(dense_units, activation='sigmoid')(Normalization_layer2)
+    dense_layer = Dense(64, activation='relu')(attention_layer)
+    Normalization_layer = LayerNormalization()(dense_layer)
+    outputs = Dense(dense_units, activation='sigmoid')(Normalization_layer)
     model = Model(inputs, outputs)
     model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.001), metrics=['binary_accuracy'])    
     return model       

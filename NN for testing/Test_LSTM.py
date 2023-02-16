@@ -7,7 +7,13 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import os
 dirname = os.path.dirname(__file__)
-filename_train = os.path.join(dirname, 'datasets/4BitShiftRegisterSIPO_random.txt')
+filename_train = os.path.join(dirname, 'datasets/4BitShiftRegisterSIPO_random2.txt')
+
+batch_size = 100
+features = 5
+inps = 1
+outps = 4
+
 
 class ResetStatesCallback(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
@@ -16,25 +22,28 @@ class ResetStatesCallback(tf.keras.callbacks.Callback):
 # Prepare the input and output data for the new circuit
 inputs = []
 outputs = []
-prev_outputs = [0, 0, 0, 0] # initializing previous outputs with 0
+prev_outputs = [0]*outps # initializing previous outputs with 0
 # Open the file
 with open(filename_train, "r") as file:
     # Read the file line by line
     for line in file:
-        # Split the line into input and output
-        items = np.array([int(i) for i in line.strip().split()])
-        inp, out1, out2, out3, out4 = items[0], items[1], items[2], items[3], items[4]
-        inputs.append([inp] + prev_outputs)
+        # Split the line into individual list of integers
+        items = [int(x.strip().replace("'", "")) for x in line.strip().split()] 
+        inp1, out1, out2, out3, out4 = items[0], items[1], items[2], items[3], items[4]
+        inputs.append([inp1] + prev_outputs)
         outputs.append([out1, out2, out3, out4])
-        prev_outputs = [out1, out2, out3, out4]
+        for i in range(1, outps + 1):
+            output = "out{}".format(i)
+            prev_outputs.append(output)
+        prev_outputs = [out1, out2, out3, out4] 
 
 
 # Convert the inputs and outputs to numpy arrays
 inputs = np.array(inputs, dtype=np.int64)
-inputs = inputs.reshape((inputs.shape[0], 1, 5))
+inputs = inputs.reshape((inputs.shape[0], 1, features))
 inputs = inputs.astype(np.float32)
 outputs = np.array(outputs)
-outputs = outputs.reshape((-1, 4))
+outputs = outputs.reshape((-1, outps))
 
 print(inputs)
 
@@ -48,23 +57,25 @@ train_inputs, val_inputs, train_outputs, val_outputs =  train_test_split(inputs,
 print(train_inputs.shape, val_inputs.shape, train_outputs.shape, val_outputs.shape)
 
 # reshaping the data to feed into LSTM
-train_inputs = np.array(train_inputs).reshape((len(train_inputs), 1, 5))
-val_inputs = np.array(val_inputs).reshape((len(val_inputs), 1, 5))
-val_outputs = val_outputs.reshape((-1, 4))
-
-batch_size = 100
+train_inputs = np.array(train_inputs).reshape((len(train_inputs), 1, features))
+train_outputs = train_outputs.reshape((-1, outps))
+val_inputs = np.array(val_inputs).reshape((len(val_inputs), 1, features))
+val_outputs = val_outputs.reshape((-1, outps))
 
 # making sure that the data size is a multiple of the batch size
 train_inputs = train_inputs[:batch_size*(len(train_inputs)//batch_size)]
 train_outputs = train_outputs[:batch_size*(len(train_outputs)//batch_size)]
+val_inputs = val_inputs[:batch_size*(len(val_inputs)//batch_size)]
+val_outputs = val_outputs[:batch_size*(len(val_outputs)//batch_size)]
+print(train_inputs.shape, val_inputs.shape, train_outputs.shape, val_outputs.shape)
 
 # create the model
 model = Sequential()
-model.add(LSTM(128,activation='tanh',recurrent_activation='tanh', kernel_initializer='glorot_normal', stateful=True, return_sequences=True, batch_input_shape=(batch_size, 1, 5), bias_initializer ='uniform', recurrent_initializer='Zeros'))
+model.add(LSTM(128,activation='tanh',recurrent_activation='tanh', kernel_initializer='glorot_normal', stateful=True, return_sequences=True, batch_input_shape=(batch_size, 1, features), bias_initializer ='uniform', recurrent_initializer='Zeros'))
 model.add(LSTM(128,activation='tanh',recurrent_activation='tanh', kernel_initializer='glorot_normal', stateful=True, return_sequences=False, bias_initializer ='uniform', recurrent_initializer='Zeros'))
 model.add(Dense(32, activation='tanh'))
 model.add(LayerNormalization())
-model.add(Dense(4, activation='sigmoid'))
+model.add(Dense(outps, activation='sigmoid'))
 model.compile(optimizer=optimizers.Adam(learning_rate=0.001,weight_decay=0.004), loss=tf.keras.losses.BinaryCrossentropy(), metrics=['binary_accuracy'])
 
 # fit the model, passing in the custom callback
