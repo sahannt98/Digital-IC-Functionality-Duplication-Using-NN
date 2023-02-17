@@ -8,7 +8,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import os
 dirname = os.path.dirname(__file__)
-filename_train = os.path.join(dirname, 'datasets/4BitShiftRegisterSIPO_random2.txt')
+filename_train = os.path.join(dirname, 'datasets/4BitShiftRegisterSIPO_random.txt')
 
 # Prepare the input and output data for the new circuit
 inputs = []

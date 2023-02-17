@@ -2,12 +2,12 @@ import tensorflow as tf
 from keras.layers import LSTM, Dense, LayerNormalization
 from keras.models import Sequential
 from keras.callbacks import Callback
-from tensorflow.keras import initializers, optimizers
+from keras import initializers, optimizers
 import numpy as np
 from sklearn.model_selection import train_test_split
 import os
 dirname = os.path.dirname(__file__)
-filename_train = os.path.join(dirname, 'datasets/4BitShiftRegisterSIPO_random2.txt')
+filename_train = os.path.join(dirname, 'datasets/4BitShiftRegisterSIPO_random.txt')
 
 batch_size = 100
 features = 5
@@ -18,6 +18,7 @@ outps = 4
 class ResetStatesCallback(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
         self.model.reset_states()
+        print(" -> Resetting model states at end of epoch ", epoch)
 
 # Prepare the input and output data for the new circuit
 inputs = []
@@ -76,7 +77,7 @@ model.add(LSTM(128,activation='tanh',recurrent_activation='tanh', kernel_initial
 model.add(Dense(32, activation='tanh'))
 model.add(LayerNormalization())
 model.add(Dense(outps, activation='sigmoid'))
-model.compile(optimizer=optimizers.Adam(learning_rate=0.001,weight_decay=0.004), loss=tf.keras.losses.BinaryCrossentropy(), metrics=['binary_accuracy'])
+model.compile(optimizer=optimizers.Adam(learning_rate=0.001,decay=0.004), loss=tf.keras.losses.BinaryCrossentropy(), metrics=['binary_accuracy'])
 
 # fit the model, passing in the custom callback
 model.fit(train_inputs, train_outputs, batch_size=batch_size, epochs=10, validation_data=(val_inputs, val_outputs), shuffle=False, callbacks=[ResetStatesCallback()])

@@ -19,7 +19,7 @@ with open(filename_train, "r") as file:
     # Read the file line by line
     for line in file:
         # Split the line into input and output
-        items = np.array([int(i) for i in line.strip().split()])
+        items = np.array([int(x.strip().replace("'", "")) for x in line.strip().split()])
         inp, out1, out2, out3, out4 = items[0], items[1], items[2], items[3], items[4]
         inputs.append([inp] + prev_outputs)
         outputs.append([out1, out2, out3, out4])
