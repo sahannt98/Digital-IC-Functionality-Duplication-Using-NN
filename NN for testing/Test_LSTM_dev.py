@@ -2,7 +2,7 @@ import tensorflow as tf
 from keras.layers import LSTM, Dense, LayerNormalization, InputLayer, BatchNormalization
 from keras.models import Sequential
 from keras.callbacks import Callback
-from tensorflow.keras import initializers, optimizers
+from keras import initializers, optimizers
 import numpy as np
 from sklearn.model_selection import train_test_split
 import os
@@ -26,7 +26,7 @@ with open(filename_train, "r") as file:
     count = 0
     for line in file:
         # Split the line into input and output
-        items = np.array([int(i) for i in line.strip().split()])
+        items = [int(x.strip().replace("'", "")) for x in line.strip().split()] 
         inp, out1, out2, out3, out4 = items[0], items[1], items[2], items[3], items[4]
         if count >= timestp+1:
             inputs.append(data)
@@ -78,7 +78,7 @@ model.add(LSTM(128, activation='tanh', recurrent_activation='tanh', kernel_initi
 model.add(Dense(64, activation='tanh'))
 model.add(BatchNormalization())
 model.add(Dense(4, activation='sigmoid'))
-model.compile(optimizer=optimizers.Adam(learning_rate=0.001, weight_decay=0.004), loss=tf.keras.losses.BinaryCrossentropy(), metrics=['binary_accuracy'])
+model.compile(optimizer=optimizers.Adam(learning_rate=0.001, decay=0.004), loss=tf.keras.losses.BinaryCrossentropy(), metrics=['binary_accuracy'])
 
 # fit the model, passing in the custom callback
 model.fit(train_inputs, train_outputs, batch_size=batch_size, epochs=10, validation_data=(val_inputs, val_outputs), shuffle=False, callbacks=[ResetStatesCallback()])
