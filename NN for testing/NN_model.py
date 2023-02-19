@@ -137,12 +137,14 @@ if __name__ == "__main__":
     # Wandb
     wandb.init(project="Counters", entity="ic-functionality-duplication",
     config={
-    "architecture": "LSTM",
+    "architecture": "LSTM1=128, LSTM2=128, Dense=64, LayerNormalization",
+    "callbacks": "ResetStatesCallback",
     "dataset": "16-Bit-Counter",
     "batch_size": batch_size,
     "epochs": epochs,
     "learning_rate": lr,
     "optimizer": "Adam",
+    "decay": 0.004,
     "initializer": "GlorotNormal",
     "time_steps": time_steps,
     })
@@ -159,7 +161,7 @@ if __name__ == "__main__":
     X_train, X_val, y_train, y_val = X_train[len(X_train)%batch_size:], X_val[len(X_val)%batch_size:], y_train[len(y_train)%batch_size:], y_val[len(y_val)%batch_size:]
 
     # For debugging
-    print("\ninput_shape ",Sequential_X.shape,"\n")
+    print("\n input_shape ",Sequential_X.shape,"\n")
     print("output_shape ",Sequential_Y.shape,"\n")
 
     model, early_stopping, reduce_lr = createModel(Sequential_X[0].shape, batch_size, number_of_oututs, k_initializer, opt)
