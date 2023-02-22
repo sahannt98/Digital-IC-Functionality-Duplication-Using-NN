@@ -73,7 +73,7 @@ def createModel(i_shape, b_size, Outputs, k_initializer, opt):
     model.add(LSTM(128, activation='tanh', recurrent_activation='tanh',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.0,recurrent_dropout=0.0))
     # model.add(LSTM(128, activation='tanh', recurrent_activation='tanh',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.0,recurrent_dropout=0.0))
     # model.add(GroupNormalization())
-    model.add(Dense(128, activation='elu'))
+    model.add(Dense(64, activation='elu'))
     # model.add(Dense(64, activation='elu'))
     # model.add(LayerNormalization())
     model.add(Dense(Outputs,activation='sigmoid'))
@@ -107,7 +107,7 @@ def newModel(i_shape, Outputs, k_initializer, opt, b_size=1):
 
 # fit network / training
 def trainModel(model, X_train, y_train, X_val, y_val, Epochs, b_size, early_stopping, reduce_lr):    
-    model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = Epochs, verbose=1, shuffle=False, callbacks=[reduce_lr]) # callbacks=[tensorboard_callback, early_stopping, reduce_lr, WandbCallback()])
+    model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = Epochs, verbose=1, shuffle=False, callbacks=[ResetStatesCallback, WandbCallback()]) # callbacks=[tensorboard_callback, early_stopping, reduce_lr, WandbCallback()])
     return model
 
 
@@ -127,7 +127,7 @@ if __name__ == "__main__":
     number_of_inputs = 2
     number_of_outputs = 16
     time_steps = 25
-    epochs = 100
+    epochs = 10
     lr = 0.01
 
     # optimizers
@@ -139,26 +139,28 @@ if __name__ == "__main__":
     # k_initializer1=initializers.RandomUniform(minval=0.4, maxval=0.42, seed=2) 
 
     # Wandb
-    # wandb.init(project="Counters", entity="ic-functionality-duplication",
-    # config={
-    # "architecture": "LSTM1, Dense",
-    # "architecture_values": "10, 16",
-    # "LSTM1": "10",
-    # "Dense": "16",
-    # "Stateful": "True",
-    # "Activation": "(tanh, recurrent=tanh), gelu",
-    # "Activation_LSTM1": "tanh, recurrent=tanh",
-    # "Activation_Dense": "gelu",
-    # "callbacks": "ResetStatesCallback",
-    # "dataset": "16-Bit-Counter",
-    # "batch_size": batch_size,
-    # "epochs": epochs,
-    # "learning_rate": lr,
-    # "optimizer": "Adam",
-    # "decay": 0.04,
-    # "initializer": "GlorotNormal",
-    # "time_steps": time_steps,
-    # })
+    wandb.init(project="ShiftRegister_SIPO_new", entity="ic-functionality-duplication",
+    config={
+    "architecture": "LSTM1, Dense",
+    "architecture_values": "128, 64",
+    "LSTM1": "128",
+    "Dense": "64",
+    "Stateful": "True",
+    "organized_input": "(i)th_input+(i-1)th_output+(i-2)th_output",
+    "organized_output": "(i)th_output+(i-1)th_output",
+    "Activation": "(tanh, recurrent=tanh), gelu",
+    "Activation_LSTM1": "tanh, recurrent=tanh",
+    "Activation_Dense": "gelu",
+    "callbacks": "ResetStatesCallback",
+    "dataset": "16-Bit-ShiftRegisterSIPO",
+    "batch_size": batch_size,
+    "epochs": epochs,
+    "learning_rate": lr,
+    "optimizer": "Adam",
+    "decay": 0.04,
+    "initializer": "GlorotNormal",
+    "time_steps": time_steps,
+    })
     
     
     # Tensorboard
