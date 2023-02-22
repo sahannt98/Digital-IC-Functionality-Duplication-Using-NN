@@ -153,6 +153,7 @@ if __name__ == "__main__":
     "Activation_Dense": "gelu",
     "callbacks": "ResetStatesCallback",
     "dataset": "16-Bit-ShiftRegisterSIPO",
+    "data_size": "train=1000000, test=100000",
     "batch_size": batch_size,
     "epochs": epochs,
     "learning_rate": lr,
