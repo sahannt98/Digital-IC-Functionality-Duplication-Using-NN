@@ -107,7 +107,7 @@ def newModel(i_shape, Outputs, k_initializer, opt, b_size=1):
 
 # fit network / training
 def trainModel(model, X_train, y_train, X_val, y_val, Epochs, b_size, early_stopping, reduce_lr):    
-    model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = Epochs, verbose=1, shuffle=False, callbacks=[ResetStatesCallback, WandbCallback()]) # callbacks=[tensorboard_callback, early_stopping, reduce_lr, WandbCallback()])
+    model.fit(X_train, y_train, validation_data=(X_val, y_val), batch_size=b_size, epochs = Epochs, verbose=1, shuffle=False, callbacks=[WandbCallback(), ResetStatesCallback()]) # callbacks=[tensorboard_callback, early_stopping, reduce_lr, WandbCallback(), ResetStatesCallback])
     return model
 
 
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     dirname = os.path.dirname(__file__)
     filename_train = os.path.join(dirname, 'datasets/16BitShiftRegisterSIPO_random.txt')
     filename_valid = os.path.join(dirname, 'datasets/val_16BitShiftRegisterSIPO_random.txt')
-    batch_size = 50
+    batch_size = 5000
     number_of_inputs = 2
     number_of_outputs = 16
     time_steps = 25
@@ -148,6 +148,7 @@ if __name__ == "__main__":
     "Stateful": "True",
     "organized_input": "(i)th_input+(i-1)th_output+(i-2)th_output",
     "organized_output": "(i)th_output+(i-1)th_output",
+    "organized_output": "[X(i)+Y(i-1)+Y(i-2)] & [Y(i)+Y(i-1)]",
     "Activation": "(tanh, recurrent=tanh), gelu",
     "Activation_LSTM1": "tanh, recurrent=tanh",
     "Activation_Dense": "gelu",
