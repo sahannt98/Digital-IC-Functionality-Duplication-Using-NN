@@ -70,10 +70,12 @@ def createModel(i_shape, b_size, Outputs, k_initializer, opt):
     # Define model architecture
     model = Sequential()
     model.add(InputLayer(input_shape=i_shape,batch_size=b_size))
-    model.add(LSTM(128, activation='tanh', recurrent_activation='tanh',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.0,recurrent_dropout=0.0))
-    # model.add(LSTM(128, activation='tanh', recurrent_activation='tanh',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.0,recurrent_dropout=0.0))
+    model.add(LSTM(8, activation='tanh', recurrent_activation='tanh',return_sequences=True,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.0,recurrent_dropout=0.1))
+    model.add(LSTM(8, activation='tanh', recurrent_activation='tanh',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.0,recurrent_dropout=0.0))
     # model.add(GroupNormalization())
-    model.add(Dense(64, activation='elu'))
+    model.add(Dense(64, activation='tanh'))
+    # model.add(Dense(128, activation='tanh'))
+    # model.add(Dropout(0.2))
     # model.add(Dense(64, activation='elu'))
     # model.add(LayerNormalization())
     model.add(Dense(Outputs,activation='sigmoid'))
@@ -127,7 +129,7 @@ if __name__ == "__main__":
     number_of_inputs = 2
     number_of_outputs = 16
     time_steps = 25
-    epochs = 10
+    epochs = 60
     lr = 0.01
 
     # optimizers
@@ -141,20 +143,26 @@ if __name__ == "__main__":
     # Wandb
     wandb.init(project="ShiftRegister_SIPO_new", entity="ic-functionality-duplication",
     config={
-    "architecture": "LSTM1, Dense",
-    "architecture_values": "128, 64",
-    "LSTM1": "128",
+    "architecture": "LSTM1,LSTM2, Dense",
+    "architecture_values": "8, 8, 64",
+    "LSTM1": "8",
+    "LSTM2": "8",
     "Dense": "64",
+    "dropout": "LSTM1=(0.0, 0.1), LSTM2=(0.0, 0.0)",    
+    "LSTM1_dropout": "0.0",
+    "LSTM2_dropout": "0.0",
+    "LSTM1_recurrent_dropout": "0.1",
+    "LSTM2_recurrent_dropout": "0.0",
     "Stateful": "True",
     "organized_input": "(i)th_input+(i-1)th_output+(i-2)th_output",
     "organized_output": "(i)th_output+(i-1)th_output",
-    "organized_output": "[X(i)+Y(i-1)+Y(i-2)] & [Y(i)+Y(i-1)]",
-    "Activation": "(tanh, recurrent=tanh), gelu",
+    "organized_data": "[X(i)+Y(i-1)+Y(i-2)] & [Y(i)+Y(i-1)]",
+    "Activation": "(tanh, recurrent=tanh), tanh",
     "Activation_LSTM1": "tanh, recurrent=tanh",
-    "Activation_Dense": "gelu",
+    "Activation_Dense": "tanh",
     "callbacks": "ResetStatesCallback",
     "dataset": "16-Bit-ShiftRegisterSIPO",
-    "data_size": "train=1000000, test=100000",
+    "data_size": "train=1000000, val=100000",
     "batch_size": batch_size,
     "epochs": epochs,
     "learning_rate": lr,
