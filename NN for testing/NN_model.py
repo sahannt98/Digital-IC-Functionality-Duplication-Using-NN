@@ -48,8 +48,8 @@ def intializeDataSet(X,Y):
         if i == 0 and i == 1:
             pass
         else:
-            X_.append([i for i in X[i]]+[i for i in Y[i-1]]+[i for i in Y[i-2]])
-            Y_.append([i for i in Y[i]]+[i for i in Y[i-1]])
+            X_.append([i for i in X[i]]+[i for i in Y[i-1]])
+            Y_.append([i for i in Y[i]])
     return X_,Y_
 
 
@@ -70,14 +70,15 @@ def createModel(i_shape, b_size, Outputs, k_initializer, opt):
     # Define model architecture
     model = Sequential()
     model.add(InputLayer(input_shape=i_shape,batch_size=b_size))
-    model.add(LSTM(8, activation='tanh', recurrent_activation='tanh',return_sequences=True,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.0,recurrent_dropout=0.1))
-    model.add(LSTM(8, activation='tanh', recurrent_activation='tanh',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.0,recurrent_dropout=0.0))
+    model.add(LSTM(32, activation='tanh', recurrent_activation='tanh',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.0,recurrent_dropout=0.1))
+    # model.add(LSTM(8, activation='tanh', recurrent_activation='tanh',return_sequences=False,stateful=True,kernel_initializer=k_initializer,bias_initializer ='uniform',recurrent_initializer='Zeros',dropout=0.0,recurrent_dropout=0.0))
     # model.add(GroupNormalization())
     model.add(Dense(64, activation='tanh'))
-    # model.add(Dense(128, activation='tanh'))
+    # model.add(BatchNormalization())
+    model.add(Dense(64, activation='tanh'))
     # model.add(Dropout(0.2))
     # model.add(Dense(64, activation='elu'))
-    # model.add(LayerNormalization())
+    # model.add(BatchNormalization())
     model.add(Dense(Outputs,activation='sigmoid'))
     model.summary()
     model.compile(loss='binary_crossentropy',optimizer=opt, metrics=['binary_accuracy'])
@@ -125,11 +126,11 @@ if __name__ == "__main__":
     dirname = os.path.dirname(__file__)
     filename_train = os.path.join(dirname, 'datasets/16BitShiftRegisterSIPO_random.txt')
     filename_valid = os.path.join(dirname, 'datasets/val_16BitShiftRegisterSIPO_random.txt')
-    batch_size = 5000
+    batch_size = 8192
     number_of_inputs = 2
     number_of_outputs = 16
-    time_steps = 25
-    epochs = 60
+    time_steps = 16
+    epochs = 10
     lr = 0.01
 
     # optimizers
@@ -137,26 +138,24 @@ if __name__ == "__main__":
     opt = optimizers.Adam(learning_rate=lr,decay=0.04)
 
     # weight initialize
-    k_initializer= initializers.GlorotNormal(seed=20)#seed=20
+    k_initializer= initializers.HeNormal(seed=20)#seed=20
     # k_initializer1=initializers.RandomUniform(minval=0.4, maxval=0.42, seed=2) 
 
     # Wandb
-    wandb.init(project="ShiftRegister_SIPO_new", entity="ic-functionality-duplication",
+    wandb.init(project="final", entity="ic-functionality-duplication",
     config={
-    "architecture": "LSTM1,LSTM2, Dense",
-    "architecture_values": "8, 8, 64",
-    "LSTM1": "8",
-    "LSTM2": "8",
-    "Dense": "64",
-    "dropout": "LSTM1=(0.0, 0.1), LSTM2=(0.0, 0.0)",    
+    "architecture": "LSTM1, Dense1, Dense2",
+    "architecture_values": "32, 64, 64",
+    "LSTM1": "32",
+    "Dense1": "64",
+    "Dense2": "64",
+    "dropout": "LSTM1=(0.0, 0.1)",    
     "LSTM1_dropout": "0.0",
-    "LSTM2_dropout": "0.0",
     "LSTM1_recurrent_dropout": "0.1",
-    "LSTM2_recurrent_dropout": "0.0",
     "Stateful": "True",
-    "organized_input": "(i)th_input+(i-1)th_output+(i-2)th_output",
-    "organized_output": "(i)th_output+(i-1)th_output",
-    "organized_data": "[X(i)+Y(i-1)+Y(i-2)] & [Y(i)+Y(i-1)]",
+    "organized_input": "(i)th_input+(i-1)th_output",
+    "organized_output": "(i)th_output",
+    "organized_data": "[X(i)+Y(i-1)] & [Y(i)]",
     "Activation": "(tanh, recurrent=tanh), tanh",
     "Activation_LSTM1": "tanh, recurrent=tanh",
     "Activation_Dense": "tanh",
@@ -168,7 +167,7 @@ if __name__ == "__main__":
     "learning_rate": lr,
     "optimizer": "Adam",
     "decay": 0.04,
-    "initializer": "GlorotNormal",
+    "initializer": "HeNormal",
     "time_steps": time_steps,
     })
     
@@ -190,7 +189,7 @@ if __name__ == "__main__":
     print("\n input_shape ",Sequential_X_train.shape,"\n")
     print("output_shape ",Sequential_Y_train.shape,"\n")
 
-    model, early_stopping, reduce_lr = createModel(Sequential_X_train[0].shape, batch_size, number_of_outputs*2, k_initializer, opt)
+    model, early_stopping, reduce_lr = createModel(Sequential_X_train[0].shape, batch_size, number_of_outputs, k_initializer, opt)
     model = trainModel(model, X_train, y_train, X_val, y_val, epochs, batch_size, early_stopping, reduce_lr)
 
     # For wights & model
