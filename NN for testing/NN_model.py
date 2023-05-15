@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from keras.models import Sequential
 from keras import initializers, optimizers
-from keras.layers import InputLayer, Dense, LSTM, Dropout, BatchNormalization, LayerNormalization, GroupNormalization
+from keras.layers import InputLayer, Dense, LSTM, Dropout, BatchNormalization, LayerNormalization #GroupNormalization
 from keras.callbacks import Callback, EarlyStopping, ReduceLROnPlateau
 
 # For the purpose of omitting "WARNING:absl:Found untraced functions"
@@ -124,8 +124,7 @@ def copyWeights(model, newModel):
 if __name__ == "__main__":
 
     dirname = os.path.dirname(__file__)
-    filename_train = os.path.join(dirname, 'datasets/16BitShiftRegisterSIPO_random.txt')
-    filename_valid = os.path.join(dirname, 'datasets/val_16BitShiftRegisterSIPO_random.txt')
+    filename = os.path.join(dirname, 'datasets/16BitShiftRegisterSIPO_random.txt')
     batch_size = 8192
     number_of_inputs = 2
     number_of_outputs = 16
@@ -177,19 +176,17 @@ if __name__ == "__main__":
     # tensorboard_callback = keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
     # dataset preparation and then seperation for training & validation data
-    X_train,Y_train = readFile(filename_train, number_of_inputs)
-    X_val,Y_val = readFile(filename_valid, number_of_inputs)
+    X_train,Y_train = readFile(filename, number_of_inputs)
     X_train_, Y_train_ = intializeDataSet(X_train,Y_train)
-    X_val_, Y_val_ = intializeDataSet(X_val,Y_val)
-    Sequential_X_train, Sequential_Y_train = reArangeDataSet(X_train_, Y_train_, time_steps)
-    Sequential_X_val, Sequential_Y_val = reArangeDataSet(X_val_, Y_val_, time_steps)
-    X_train, X_val, y_train, y_val = Sequential_X_train[len(Sequential_X_train)%batch_size:], Sequential_X_val[len(Sequential_X_val)%batch_size:], Sequential_Y_train[len(Sequential_Y_train)%batch_size:], Sequential_Y_val[len(Sequential_Y_val)%batch_size:]
-
+    Sequential_X, Sequential_Y = reArangeDataSet(X_train_, Y_train_, time_steps)
+    X_train, X_val, y_train, y_val = train_test_split(Sequential_X, Sequential_Y, test_size=0.2, random_state=42)
+    X_train, X_val, y_train, y_val = X_train[len(X_train)%batch_size:], X_val[len(X_val)%batch_size:], y_train[len(y_train)%batch_size:], y_val[len(y_val)%batch_size:]
+    
     # For debugging
-    print("\n input_shape ",Sequential_X_train.shape,"\n")
-    print("output_shape ",Sequential_Y_train.shape,"\n")
+    print("\n input_shape ",Sequential_X.shape,"\n")
+    print("output_shape ",Sequential_Y.shape,"\n")
 
-    model, early_stopping, reduce_lr = createModel(Sequential_X_train[0].shape, batch_size, number_of_outputs, k_initializer, opt)
+    model, early_stopping, reduce_lr = createModel(Sequential_X[0].shape, batch_size, number_of_outputs, k_initializer, opt)
     model = trainModel(model, X_train, y_train, X_val, y_val, epochs, batch_size, early_stopping, reduce_lr)
 
     # For wights & model
