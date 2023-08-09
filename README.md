@@ -1,4 +1,6 @@
 # DIGITAL-IC-FUNCTIONALITY-DUPLICATION
+#### Final Year Project - (Deep Learning)
+
 ### _Dependencies_ 
 ```
 pip install numpy
